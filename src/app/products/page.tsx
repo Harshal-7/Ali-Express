@@ -1,13 +1,17 @@
 "use client";
 
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 
-const ProductListPage = () => {
+const Products = () => {
   const router = useRouter();
   const {
     query: { data },
   } = router;
+
+  useEffect(() => {
+    console.log(data);
+  }, []);
 
   return (
     <div>
@@ -16,4 +20,4 @@ const ProductListPage = () => {
   );
 };
 
-export default ProductListPage;
+export default Products;

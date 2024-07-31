@@ -52,6 +52,17 @@ export const ProductsCategory = [
     ],
   },
   {
+    name: "Shoes",
+    id: 322,
+    list: [
+      { name: "Women's Shoes", id: 200133142 },
+      { name: "Men's Shoes", id: 200131145 },
+      { name: "Mules & Clogs", id: 200001000 },
+      { name: "Shoe Accessories", id: 32210 },
+      { name: "Other Shoes", id: 32299 },
+    ],
+  },
+  {
     name: "Computer & Office",
     id: 7,
     list: [
@@ -336,17 +347,7 @@ export const ProductsCategory = [
       { name: "Wedding Dresses", id: 32005 },
     ],
   },
-  {
-    name: "Shoes",
-    id: 322,
-    list: [
-      { name: "Women's Shoes", id: 200133142 },
-      { name: "Men's Shoes", id: 200131145 },
-      { name: "Mules & Clogs", id: 200001000 },
-      { name: "Shoe Accessories", id: 32210 },
-      { name: "Other Shoes", id: 32299 },
-    ],
-  },
+
   {
     name: "Electronic Components & Supplies",
     id: 502,
@@ -699,6 +700,7 @@ export const ProductsCategory = [
     ],
   },
 ];
+
 
 export const Product = [
   {

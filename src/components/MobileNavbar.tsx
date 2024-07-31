@@ -4,21 +4,6 @@ import { Menu, Search, ShoppingCart, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import HamburgerMenu from "./HamburgerMenu";
-import { ProductsCategory } from "@/config.product";
-
-// Define the types for the product category and product items
-type ProductItem = {
-  name: string | null;
-  id: number;
-};
-
-type ProductCategory = {
-  name: string;
-  id: number;
-  list: ProductItem[];
-};
-
-const productsCategory: ProductCategory[] = ProductsCategory;
 
 const MobileNavbar = () => {
   return (

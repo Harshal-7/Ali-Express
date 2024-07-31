@@ -1,59 +1,62 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import { ProductsCategory } from "@/config.product";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ShoppingCart } from "lucide-react";
 
 const ItemCard = ({ product }: { product: any }) => {
+  const handleCartButton = (item: any) => {
+    console.log("MY ITEM : ", item);
+  };
+
   useEffect(() => {
     // console.log(product);
   }, []);
 
   return (
-    <div className="">
-      <Link href="/" className="flex flex-col group">
-        <div
-          className={cn(
-            "relative w-[160px] md:w-[250px] h-[220px] md:h-[300px] overflow-hidden group rounded-md"
-          )}
-        >
+    <div
+      key={product.item.key}
+      className="flex flex-col group hover:border hover:shadow-md relative w-[140px] md:w-[250px] h-[200px] md:h-[350px] overflow-hidden group rounded-lg"
+    >
+      <div
+        key={product.item.key}
+        className="relative w-[140px] md:w-[250px] h-[200px] md:h-[350px] overflow-hidden group rounded-lg"
+      >
+        <Link href={`/products/${product.item.itemId}`}>
           <img
             src={product.item.image}
-            alt={product.item.title}
-            className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+            alt="img"
+            className="w-full h-full object-cover transition-transform duration-300 "
           />
-        </div>
+        </Link>
+      </div>
 
-        <div className="tracking-wider mt-4 mb-1 flex gap-2 items-center">
-          <span>{product.item.name}</span>
-          <ArrowRight className="h-5 w-5 transition-transform duration-500 scale-0 group-hover:scale-100" />{" "}
+      <div
+        key={product.item.key}
+        className="tracking-wider mt-4 mb-1 flex gap-2 items-center pl-2"
+      >
+        <Link
+          href={`/products/${product.item.itemId}`}
+          className="text-sm line-clamp-2"
+        >
+          {product.item.title}
+        </Link>
+      </div>
+      <div
+        key={product.item.key}
+        className="text-xs tracking-widest font-bold pl-2 mb-5 mt-2 flex justify-between items-center"
+      >
+        <div>
+          <span> Rs. </span>
+          <span className="text-xl">
+            {(product.item.sku.def.promotionPrice * 83).toFixed(2)}
+          </span>
         </div>
-        <div className="text-xs tracking-widest">
-          Rs. {product.ProductPrice}
-        </div>
-      </Link>
+        <button onClick={() => handleCartButton(product.item)}>
+          <ShoppingCart className="w-12 h-12 absolute bottom-2 right-2 bg-white p-3 rounded-full hover:bg-black hover:text-white" />
+        </button>
+      </div>
     </div>
   );
 };

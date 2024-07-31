@@ -40,10 +40,5 @@ export default function Home() {
     setData(productsCategory);
   }, []);
 
-  return (
-    <main className="flex flex-col items-center">
-      <MobileNavbar />
-      <Navbar />
-    </main>
-  );
+  return <main className="flex flex-col items-center">{/* <Navbar /> */}</main>;
 }

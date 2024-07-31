@@ -11,10 +11,8 @@ import {
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { ProductsCategory } from "@/config.product";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
-// Define the types for the product category and product items
 type ProductItem = {
   name: string | null;
   id: number;

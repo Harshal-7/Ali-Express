@@ -22,6 +22,7 @@ import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import SignInButton from "./SignInButton";
 import { MyDropdownMenu } from "./MyDropdownMenu";
+import Link from "next/link";
 
 // Define the types for the product category and product items
 type ProductItem = {
@@ -46,16 +47,19 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="w-full hidden md:flex flex-col justify-center items-center p-2 sticky top-0 left-0 z-50 bg-foreground text-background">
-      <ul className="flex gap-10 p-2 w-full max-w-7xl justify-center">
+    <nav className="w-full hidden md:flex flex-col justify-center items-center p-2 sticky top-0 left-0 z-50 bg-[#191919] text-background">
+      <ul className="flex gap-2 p-2 w-full max-w-screen-xl justify-center">
         <div className="flex gap-2 justify-center items-center">
-          <img
-            className="w-48"
-            alt="logo"
-            src="https://ae01.alicdn.com/kf/Sb38c5071993440b8939680d5ebcc081be/1449x315.png"
-          />
+          <Link href="/">
+            <img
+              className="w-48"
+              alt="logo"
+              src="https://ae01.alicdn.com/kf/Sb38c5071993440b8939680d5ebcc081be/1449x315.png"
+            />
+          </Link>
+          <MyDropdownMenu />
         </div>
-        <div className="w-1/2 p-2 relative">
+        <div className="w-1/3 p-2 relative">
           <Input
             className="rounded-full bg-gray-200 px-4"
             placeholder="smart watches for men"
@@ -63,15 +67,15 @@ const Navbar = () => {
           <Search className="absolute top-[18px] right-5 text-gray-700 w-5 h-5" />
         </div>
 
-        <div className="flex gap-4 justify-center items-center">
+        <div className="flex gap-2 justify-center items-center">
           <HoverCard openDelay={300} closeDelay={300}>
             <HoverCardTrigger asChild>
               <button className="flex gap-2 justify-center items-center">
                 <User className="w-8 h-8" />
                 <div className="flex flex-col text-start flex-wrap">
                   <p className="text-sm ">Welcome</p>
-                  <div className="text-sm flex items-center gap-1">
-                    <p>Sign in / Register</p>
+                  <div className="text-xs flex items-center gap-1">
+                    <p className="text-ellipsis" >SignIn / Register</p>
                     <ChevronDown className="w-4 h-4" />
                   </div>
                 </div>
@@ -104,13 +108,13 @@ const Navbar = () => {
             </HoverCardContent>
           </HoverCard>
           <button></button>
-          <button className="flex gap-2 justify-center items-center">
+          <Link href="/cart" className="flex gap-2 justify-center items-center">
             <ShoppingCart className="w-6 h-6" />
             <p className="flex flex-col text-start">Cart</p>
-          </button>
+          </Link>
         </div>
       </ul>
-      <MyDropdownMenu />
+      {/* <MyDropdownMenu /> */}
     </nav>
   );
 };
