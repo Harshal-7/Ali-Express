@@ -36,12 +36,14 @@ export function MyDropdownMenu() {
   const router = useRouter();
   const [data, setData] = useState<ProductCategory[]>([]);
 
+  // Get Items from API
   const handleItemList = async (name: string | null) => {
-    console.log("Name : ", name);
-
     const response = await getProductsList(name);
-    console.log("Adding to store!", response);
     dispatch(setProducts(response?.data));
+
+    //TODO : REMOVE
+    console.log("Name : ", name);
+    console.log("Adding to store!", response);
 
     router.push(`/search/${name}`);
   };

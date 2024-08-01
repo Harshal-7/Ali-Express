@@ -1,23 +1,35 @@
 "use client";
 
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import BackButton from "./BackButton";
 import Header from "./Header";
 
 interface CardWrapperProps {
   children: React.ReactNode;
   headerLabel: string;
+  backButtonLabel?: string;
+  backButtonHref?: string;
 }
 
-const CardWrapper = ({ children, headerLabel }: CardWrapperProps) => {
+const CardWrapper = ({
+  children,
+  headerLabel,
+  backButtonLabel,
+  backButtonHref,
+}: CardWrapperProps) => {
   return (
     <Card className="border-none shadow-none">
-      <CardHeader className="p-2">
+      <CardHeader className="p-2 mb-8">
         <Header label={headerLabel} />
       </CardHeader>
       <CardContent>{children}</CardContent>
 
+      <CardFooter>
+        <BackButton href={backButtonHref} label={backButtonLabel} />
+      </CardFooter>
+
       <CardFooter className="py-0">
-        <p className="text-xs mt-4 text-muted-foreground">
+        <p className="text-xs mt-6 text-muted-foreground">
           By continuing, you confirm that you‘re an adult and you’ve read and
           accepted our
           <a

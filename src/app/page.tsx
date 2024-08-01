@@ -40,5 +40,15 @@ export default function Home() {
     setData(productsCategory);
   }, []);
 
-  return <main className="flex flex-col items-center">{/* <Navbar /> */}</main>;
+  return (
+    <main className="flex flex-col items-center">
+      <Image
+        width={1500}
+        height={200}
+        src="/banner.jpg"
+        alt="banner"
+        className="mt-10"
+      />
+    </main>
+  );
 }
