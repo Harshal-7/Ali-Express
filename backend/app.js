@@ -4,6 +4,7 @@ import categoryRouter from './routes/categoryRoute.js';
 import userRouter from './routes/userRoute.js';
 import cartRouter from './routes/cartRoute.js';
 import cookieParser from "cookie-parser";
+import wishlistRouter from './routes/wishListRoute.js';
 
 
 const app = express()
@@ -24,6 +25,9 @@ app.use('/api', userRouter)
 
 // for cart related requests
 app.use(`/api`, cartRouter)
+
+// for wishlist related requests
+app.use(`/api`, wishlistRouter)
 
 
 
