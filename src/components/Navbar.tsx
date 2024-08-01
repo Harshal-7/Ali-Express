@@ -9,7 +9,7 @@ import {
   ShoppingCart,
   User,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import HamburgerMenu from "./HamburgerMenu";
 import { ProductsCategory } from "@/config.product";
@@ -26,6 +26,7 @@ import { getProductsList } from "@/utils/getProduct";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { useRouter } from "next/navigation";
 import { setProducts } from "@/lib/store/features/product/productSlice";
+import { signOut, useSession } from "next-auth/react";
 
 // Define the types for the product category and product items
 type ProductItem = {
@@ -48,6 +49,13 @@ const Navbar = () => {
   const [data, setData] = useState<ProductCategory[]>([]);
   const [searchInput, setSearchInput] = useState("");
 
+  const session = useSession();
+
+  useEffect(() => {
+    console.log(session);
+    setData(productsCategory);
+  }, []);
+
   const handleSearchChange = (e: any) => {
     setSearchInput(e.target.value);
   };
@@ -59,15 +67,14 @@ const Navbar = () => {
     //TODO : REMOVE
     console.log("Name : ", searchInput);
     console.log("Adding to store!", response);
-    
+
     setSearchInput("");
     router.push(`/search/${searchInput}`);
   };
 
-  useEffect(() => {
-    // console.log(productsCategory);
-    setData(productsCategory);
-  }, []);
+  const handleLogOut = () => {
+    signOut();
+  };
 
   return (
     <nav className="w-full hidden md:flex flex-col justify-center items-center p-2 sticky top-0 left-0 z-50 bg-[#191919] text-background">
@@ -98,34 +105,58 @@ const Navbar = () => {
             <HoverCardTrigger asChild>
               <button className="flex gap-2 justify-center items-center">
                 <User className="w-8 h-8" />
-                <div className="flex flex-col text-start flex-wrap">
-                  <p className="text-sm ">Welcome</p>
-                  <div className="text-xs flex items-center gap-1">
-                    <p className="text-ellipsis">SignIn / Register</p>
-                    <ChevronDown className="w-4 h-4" />
+                {session?.status !== "authenticated" ? (
+                  <div className="flex flex-col text-start flex-wrap">
+                    <p className="text-sm ">Welcome</p>
+                    <div className="text-xs flex items-center gap-1">
+                      <p className="">Sign In / Register</p>
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="flex flex-col text-start flex-wrap">
+                    <p className="text-sm line-clamp-2">
+                      Hi, {session.data.user?.name}
+                    </p>
+                    <div className="text-xs flex items-center gap-1">
+                      <p className="">Account</p>
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </div>
+                )}
               </button>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 rounded-3xl p-4">
               <div className="w-full flex flex-col items-center justify-center gap-5 mt-2">
-                <Link href="/login" className="w-full rounded-full">
+                {session?.status !== "authenticated" ? (
+                  <>
+                    <Link href="/login" className="w-full rounded-full">
+                      <Button
+                        variant="default"
+                        className="w-full rounded-full text-xl py-6"
+                      >
+                        Sign In
+                      </Button>
+                    </Link>
+
+                    <Link href="/register" className="w-full rounded-full">
+                      <Button
+                        variant="secondary"
+                        className="w-full rounded-full text-xl py-6"
+                      >
+                        Register
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
                   <Button
                     variant="default"
                     className="w-full rounded-full text-xl py-6"
+                    onClick={handleLogOut}
                   >
-                    Sign In
+                    Sign Out
                   </Button>
-                </Link>
-
-                <Link href="/register" className="w-full rounded-full">
-                  <Button
-                    variant="secondary"
-                    className="w-full rounded-full text-xl py-6"
-                  >
-                    Register
-                  </Button>
-                </Link>
+                )}
 
                 <Separator />
 
