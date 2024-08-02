@@ -50,7 +50,7 @@ const ItemCard = ({ product }: { product: any }) => {
         className="text-xs tracking-widest font-bold pl-2 mb-5 mt-2 flex justify-between items-center"
       >
         <div>
-          <span> Rs. </span>
+          <span> ₹ </span>
           <span className="md:text-xl">
             {(product.item.sku.def.promotionPrice * 83).toFixed(2)}
           </span>

@@ -105,7 +105,7 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
           <div className="flex flex-col gap-5">
             <div className="font-bold text-xl mt-2">{product.title}</div>
             <div className="font-bold text-xl mt-2">
-              Rs. {(product.sku.base[0].price * 83).toFixed(2)}
+              ₹ {(product.sku.base[0].price * 83).toFixed(2)}
             </div>
           </div>
         </div>

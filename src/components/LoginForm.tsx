@@ -16,19 +16,28 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+
 import { login } from "@/actions/login";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import FormError from "@/components/auth/FormError";
 import { Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   var urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "Email already in use with different provider!"
       : "";
+
+  useEffect(() => {
+    router.refresh();
+  }, [status, session]);
 
   const { toast } = useToast();
 

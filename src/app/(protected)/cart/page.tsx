@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,8 +23,20 @@ import Link from "next/link";
 const CartPage = () => {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cartItems.data);
+  const [totalCost, setTotalCost] = useState(0);
 
   const router = useRouter();
+
+  useEffect(() => {
+    let cost = 0;
+    if (cartItems) {
+      cartItems.forEach((item, index) => {
+        cost += Number((item.sku.def.promotionPrice * 83).toFixed(2));
+      });
+    }
+
+    setTotalCost(cost);
+  });
 
   const handleRemoveProducts = () => {
     dispatch(removeAllProductsFromCart());
@@ -39,7 +51,7 @@ const CartPage = () => {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto flex flex-col justify-center items-center gap-5 mt-10">
+    <div className="w-full max-w-7xl mx-auto flex justify-center items-start gap-5 mt-10">
       <Card className="w-full max-w-5xl">
         <CardHeader>
           <CardTitle>
@@ -102,12 +114,27 @@ const CartPage = () => {
               </div>
               <Link
                 href="/"
-                className="px-5 py-3  rounded-3xl bg-red-600 text-white hover:scale-105 hover:font-bold transition-all duration-300"
+                className="px-5 py-3  rounded-3xl bg-red-500 text-white hover:scale-105 hover:bg-red-600 hover:font-bold transition-all duration-300"
               >
                 Explore More Items
               </Link>
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle>Summary</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-10 mt-10">
+          <div className="flex justify-between font-bold">
+            <div>Total</div>
+            <div>₹ {totalCost}</div>
+          </div>
+          <button className="w-full px-5 py-3 rounded-3xl bg-red-500 text-white font-bold hover:font-extrabold transition-all duration-300">
+            Checkout ({cartItems ? cartItems.length : 0})
+          </button>
         </CardContent>
       </Card>
     </div>

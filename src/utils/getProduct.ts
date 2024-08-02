@@ -13,7 +13,7 @@ export const getProductsList = async (name: string | null) => {
       currency: "USD",
     },
     headers: {
-      "x-rapidapi-key": "375c11db99msh733f21c081ddcbap1a7494jsnc8735483bd70",
+      "x-rapidapi-key": "8fd9fec7d6msh253b64b0b38c2abp1ddf82jsn09344b5aaefc",
       "x-rapidapi-host": "aliexpress-datahub.p.rapidapi.com",
     },
   };
@@ -37,7 +37,7 @@ export const getProductInfo = async (id: Number | undefined) => {
       locale: "en_US",
     },
     headers: {
-      "x-rapidapi-key": "375c11db99msh733f21c081ddcbap1a7494jsnc8735483bd70",
+      "x-rapidapi-key": "8fd9fec7d6msh253b64b0b38c2abp1ddf82jsn09344b5aaefc",
       "x-rapidapi-host": "aliexpress-datahub.p.rapidapi.com",
     },
   };

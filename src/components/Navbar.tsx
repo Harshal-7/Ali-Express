@@ -47,28 +47,30 @@ const Navbar = () => {
   const cartItems = useAppSelector((state) => state.cartItems.data);
 
   const router = useRouter();
-  const session = useSession();
+  const { data: session, status } = useSession();
 
   const [data, setData] = useState<ProductCategory[]>([]);
   const [searchInput, setSearchInput] = useState("");
 
+  // Set product-categoty data to state
   useEffect(() => {
-    // console.log(session);
     setData(productsCategory);
   }, []);
 
+  // Refresh token for auth
+  useEffect(() => {
+    router.refresh();
+  }, [status, session]);
+
+  // Store searchbar value in state
   const handleSearchChange = (e: any) => {
     setSearchInput(e.target.value);
   };
 
+  // Get Product List by serching the name of product
   const handleSearch = async () => {
     const response = await getProductsList(searchInput);
     dispatch(setProducts(response?.data));
-
-    //TODO : REMOVE
-    console.log("Name : ", searchInput);
-    console.log("Adding to store!", response);
-
     setSearchInput("");
     router.push(`/search/${searchInput}`);
   };
@@ -106,7 +108,7 @@ const Navbar = () => {
             <HoverCardTrigger asChild>
               <button className="flex gap-2 justify-center items-center">
                 <User className="w-8 h-8" />
-                {session?.status !== "authenticated" ? (
+                {status !== "authenticated" ? (
                   <div className="flex flex-col text-start flex-wrap">
                     <p className="text-sm ">Welcome</p>
                     <div className="text-xs flex items-center gap-1">
@@ -117,7 +119,7 @@ const Navbar = () => {
                 ) : (
                   <div className="flex flex-col text-start flex-wrap pr-2">
                     <p className="text-sm line-clamp-1">
-                      Hi, {session.data.user?.name}
+                      Hi, {session.user?.name}
                     </p>
                     <div className="text-xs flex items-center gap-1">
                       <p className="">Account</p>
@@ -129,7 +131,7 @@ const Navbar = () => {
             </HoverCardTrigger>
             <HoverCardContent className="w-80 rounded-3xl p-4">
               <div className="w-full flex flex-col items-center justify-center gap-5 mt-2">
-                {session?.status !== "authenticated" ? (
+                {status !== "authenticated" ? (
                   <>
                     <Link href="/login" className="w-full rounded-full">
                       <Button

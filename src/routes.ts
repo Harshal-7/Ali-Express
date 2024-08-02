@@ -30,4 +30,4 @@ export const apiAuthPrefix: string = "/api/auth";
  * The default redirect path after loggingin
  * @type {string}
  */
-export const DEFAULT_LOGIN_REDIRECT: string = "/cart";
+export const DEFAULT_LOGIN_REDIRECT: string = "/";
