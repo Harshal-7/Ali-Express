@@ -18,7 +18,7 @@ const CardWrapper = ({
   backButtonHref,
 }: CardWrapperProps) => {
   return (
-    <Card className="border-none shadow-none">
+    <Card className="hover:border hover:shadow-md bg-gray-100/45 p-5">
       <CardHeader className="p-2 mb-8">
         <Header label={headerLabel} />
       </CardHeader>

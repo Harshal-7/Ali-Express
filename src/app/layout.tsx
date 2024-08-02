@@ -29,7 +29,6 @@ export default async function RootLayout({
           <StoreProvider>
             <Navbar />
             <MobileNavbar />
-
             {children}
             <Toaster />
           </StoreProvider>

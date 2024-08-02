@@ -67,6 +67,7 @@ export function MyDropdownMenu() {
         <HoverCardContent className="w-80 rounded-3xl p-5">
           <ScrollArea className="h-[500px] w-full">
             <div className="">
+              {/* CATEGORIES */}
               {data.map((item, index) => (
                 <div key={index}>
                   <HoverCard openDelay={300} closeDelay={300}>
@@ -83,6 +84,7 @@ export function MyDropdownMenu() {
                       side="right"
                       className="w-full rounded-3xl p-4 px-10 mt-16"
                     >
+                      {/* SUB - CATEGORIES */}
                       <div className="max-h-80 flex flex-wrap flex-col gap-x-2 gap-y-3">
                         {item.list.map((listItem, index) => (
                           <div key={index}>

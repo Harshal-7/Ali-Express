@@ -37,7 +37,6 @@ const RegisterForm = () => {
 
   const onSubmit = (data: z.infer<typeof RegisterSchema>) => {
     setLoading(true);
-
     register(data).then((res) => {
       if (res.error) {
         toast({

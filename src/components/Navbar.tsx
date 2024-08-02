@@ -23,7 +23,7 @@ import { Separator } from "./ui/separator";
 import { MyDropdownMenu } from "./MyDropdownMenu";
 import Link from "next/link";
 import { getProductsList } from "@/utils/getProduct";
-import { useAppDispatch } from "@/lib/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useRouter } from "next/navigation";
 import { setProducts } from "@/lib/store/features/product/productSlice";
 import { signOut, useSession } from "next-auth/react";
@@ -44,15 +44,16 @@ const productsCategory: ProductCategory[] = ProductsCategory;
 
 const Navbar = () => {
   const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cartItems.data);
+
   const router = useRouter();
+  const session = useSession();
 
   const [data, setData] = useState<ProductCategory[]>([]);
   const [searchInput, setSearchInput] = useState("");
 
-  const session = useSession();
-
   useEffect(() => {
-    console.log(session);
+    // console.log(session);
     setData(productsCategory);
   }, []);
 
@@ -114,8 +115,8 @@ const Navbar = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col text-start flex-wrap">
-                    <p className="text-sm line-clamp-2">
+                  <div className="flex flex-col text-start flex-wrap pr-2">
+                    <p className="text-sm line-clamp-1">
                       Hi, {session.data.user?.name}
                     </p>
                     <div className="text-xs flex items-center gap-1">
@@ -174,9 +175,26 @@ const Navbar = () => {
             </HoverCardContent>
           </HoverCard>
           <button></button>
-          <Link href="/cart" className="flex gap-2 justify-center items-center">
+          <Link
+            href="/cart"
+            className="flex gap-2 justify-center items-center relative "
+          >
             <ShoppingCart className="w-6 h-6" />
-            <p className="flex flex-col text-start">Cart</p>
+            {cartItems ? (
+              <div className="flex flex-col">
+                <p className=" text-xs bg-white text-black rounded-full text-center">
+                  {cartItems.length}
+                </p>
+                <p className="flex flex-col text-start text-sm">Cart</p>
+              </div>
+            ) : (
+              <div className="flex flex-col">
+                <p className=" text-xs bg-white text-black rounded-full text-center">
+                  0
+                </p>
+                <p className="flex flex-col text-start text-sm">Cart</p>
+              </div>
+            )}
           </Link>
         </div>
       </ul>

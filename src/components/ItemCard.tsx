@@ -4,15 +4,17 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ArrowRight, ShoppingCart } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { setCartItems } from "@/lib/store/features/cart/cartSlice";
 
 const ItemCard = ({ product }: { product: any }) => {
+  const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cartItems.data);
+
   const handleCartButton = (item: any) => {
     console.log("MY ITEM : ", item);
+    dispatch(setCartItems(item));
   };
-
-  useEffect(() => {
-    // console.log(product);
-  }, []);
 
   return (
     <div
@@ -38,7 +40,7 @@ const ItemCard = ({ product }: { product: any }) => {
       >
         <Link
           href={`/products/${product.item.itemId}`}
-          className="text-sm line-clamp-2"
+          className="text-sm line-clamp-1 md:line-clamp-2"
         >
           {product.item.title}
         </Link>
@@ -49,12 +51,12 @@ const ItemCard = ({ product }: { product: any }) => {
       >
         <div>
           <span> Rs. </span>
-          <span className="text-xl">
+          <span className="md:text-xl">
             {(product.item.sku.def.promotionPrice * 83).toFixed(2)}
           </span>
         </div>
         <button onClick={() => handleCartButton(product.item)}>
-          <ShoppingCart className="w-12 h-12 absolute bottom-2 right-2 bg-white p-3 rounded-full hover:bg-black hover:text-white" />
+          <ShoppingCart className="w-5 sm:w-12 h-10 sm:h-12 absolute bottom-2 right-2 bg-white sm:p-3 rounded-full sm:hover:bg-black sm:hover:text-white align-middle" />
         </button>
       </div>
     </div>

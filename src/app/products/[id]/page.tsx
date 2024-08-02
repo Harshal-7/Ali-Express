@@ -81,7 +81,7 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
   const handleProductInfo = async (productId: any) => {
     const response = await getProductInfo(productId);
     setProduct(response?.data?.result?.item);
-    console.log("RESPONSE : ", response?.data);
+    console.log("PRODUCT DESCRIPTION : ", response?.data?.result);
   };
 
   useEffect(() => {
