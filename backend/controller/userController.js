@@ -9,7 +9,7 @@ dotenv.config()
 export const register = async (req, res) => {
     
     try {
-        const { email, password } = req.body;
+        const { name, email, password } = req.body;
         // Check if email or password is missing
         if (!email || !password) {
             return res.status(400).json({
@@ -29,6 +29,7 @@ export const register = async (req, res) => {
 		const newUser = new User({
 			email: email,
 			password: hashedPassword,
+            name: name
 		});
         await newUser.save();
 
