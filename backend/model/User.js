@@ -1,8 +1,10 @@
 import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema({
-
-    // add name also in register page
+    name : {
+        type : String,
+        required : true,
+    },
     email : {
         type : String,
         required : true,
