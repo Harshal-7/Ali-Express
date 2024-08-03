@@ -18,8 +18,6 @@ export const homeProductSlice = createSlice({
   reducers: {
     setHomeProducts(state, action) {
       state.data = action.payload?.resultList;
-
-      console.log("redux : ", current(state).data);
     },
   },
 });

@@ -19,6 +19,7 @@ import { Minus, Plus, ShoppingCart, Trash } from "lucide-react";
 import { getProductInfo } from "@/utils/getProduct";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import axios from "axios";
 
 const CartPage = () => {
   const dispatch = useAppDispatch();
@@ -35,6 +36,21 @@ const CartPage = () => {
       });
     }
 
+    const fetchCartDetails = async () => {
+      const response = await axios.get(
+        "https://ali-express-clone.onrender.com/api/cart/data",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: document.cookie,
+          },
+        }
+      );
+
+      console.log("response-cart : ", response.data);
+    };
+
+    fetchCartDetails();
     setTotalCost(cost);
   });
 

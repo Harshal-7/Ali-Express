@@ -148,7 +148,9 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
     console.log("PRODUCT DESCRIPTION : ", response?.data?.item);
   };
 
-  const handleCart = () => {};
+  const handleCart = () => {
+    
+  };
 
   if (!product) {
     return <div>...</div>;

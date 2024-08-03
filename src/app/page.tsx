@@ -54,7 +54,8 @@ export default function Home() {
           url: "https://ali-express-clone.onrender.com/api/home/moretolove",
         };
         const response = await axios.request(options);
-        dispatch(setHomeProducts(response.data));
+        setProducts(response.data?.resultList);
+        // dispatch(setHomeProducts(response.data));
       } catch (error) {
         console.log(error);
       }
@@ -63,13 +64,9 @@ export default function Home() {
     getProducts();
   }, []);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
+  useEffect(() => {
+    console.log("products", products);
+  });
 
   return (
     <main className="flex flex-col items-center">
@@ -84,11 +81,12 @@ export default function Home() {
       <div>
         <h1>More to Love</h1>
         <div className="grid grid-cols-4 gap-4">
-          {products.map((product: any, index: number) => (
-            <div key={index}>
-              <ItemCard product={product} />
-            </div>
-          ))}
+          {products &&
+            products.map((product: any, index: number) => (
+              <div key={index}>
+                <ItemCard product={product} />
+              </div>
+            ))}
         </div>
       </div>
     </main>

@@ -6,14 +6,33 @@ import { cn } from "@/lib/utils";
 import { ArrowRight, ShoppingCart } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { setCartItems } from "@/lib/store/features/cart/cartSlice";
+import axios from "axios";
 
 const ItemCard = ({ product }: { product: any }) => {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cartItems.data);
 
-  const handleCartButton = (item: any) => {
+  const handleCartButton = async (item: any) => {
     console.log("MY ITEM : ", item);
     dispatch(setCartItems(item));
+
+    await axios.post(
+      "https://ali-express-clone.onrender.com/api/cart/add",
+      {
+        productId: `${item.itemId}`,
+        title: `${item.title}`,
+        price: (item.sku.def.promotionPrice * 83).toFixed(2),
+        image: `${item.image}`,
+        quantity: 1,
+        size: "m",
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: document.cookie,
+        },
+      }
+    );
   };
 
   return (
