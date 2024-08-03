@@ -16,28 +16,25 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import axios from "axios"; // Import axios for making API requests
 
-import { login } from "@/actions/login";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import FormError from "@/components/auth/FormError";
 import { Loader2 } from "lucide-react";
-import { useSession } from "next-auth/react";
+import Cookies from 'js-cookie';
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
-  const { data: session, status } = useSession();
+  
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  var urlError =
+  const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "Email already in use with different provider!"
       : "";
 
-  useEffect(() => {
-    router.refresh();
-  }, [status, session]);
 
   const { toast } = useToast();
 
@@ -51,26 +48,30 @@ const LoginForm = () => {
 
   const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
     setLoading(true);
-    login(data)
-      .then((res) => {
-        if (res?.error) {
-          toast({
-            title: res?.error,
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "User Logged In Successfully",
-          });
-        }
-      })
-      .catch((err: any) => {
-        toast({
-          title: err.message,
-        });
-        setLoading(false);
+  
+    try {
+      const response = await axios.post('https://ali-express-clone.onrender.com/api/user/login', data); // Send data to your API endpoint
+      
+      const token = response.data.loginToken; // Assuming this is the correct key for the token
+      
+      // Set the token in the cookies
+      Cookies.set('UserAuth', token, { expires: 7 }); // Expires in 7 days or change as needed
+  
+      toast({
+        title: "Success",
+        description: "Logged in successfully.",
       });
-    setLoading(false);
+  
+      router.replace(`/`); // Redirect to the homepage after successful login
+    } catch (error: any) {
+      toast({
+        title: "Login Failed",
+        description: error.response?.data?.message || "An error occurred.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -114,6 +115,7 @@ const LoginForm = () => {
             <Button
               type="submit"
               className="w-full rounded-3xl bg-red-500 hover:bg-red-600"
+              disabled={loading}
             >
               {loading ? (
                 <Loader2 className="animate-spin w-5 h-5" />

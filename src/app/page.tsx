@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { ProductsCategory } from "@/config.product";
 import MobileNavbar from "@/components/MobileNavbar";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 // Define the types for the product category and product items
@@ -26,13 +26,13 @@ const productsCategory: ProductCategory[] = ProductsCategory;
 
 export default function Home() {
   const [productData, setProductData] = useState<ProductCategory[]>([]);
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    console.log("STATUS : ", status);
-    console.log("SESSION : ", session);
-  }, [status, session]);
+  // useEffect(() => {
+  //   console.log("STATUS : ", status);
+  //   console.log("SESSION : ", session);
+  // }, [status, session]);
 
   useEffect(() => {
     // axios

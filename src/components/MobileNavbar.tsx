@@ -1,22 +1,27 @@
 "use client";
 
 import { Menu, Search, ShoppingCart, User } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Input } from "./ui/input";
 import HamburgerMenu from "./HamburgerMenu";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { getProductsList } from "@/utils/getProduct";
 import { setProducts } from "@/lib/store/features/product/productSlice";
 import { useAppDispatch } from "@/lib/store/hooks";
 
 const MobileNavbar = () => {
   const dispatch = useAppDispatch();
-
   const router = useRouter();
-  const session = useSession();
 
   const [searchInput, setSearchInput] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check if the user is authenticated by checking the cookie
+  React.useEffect(() => {
+    if (typeof document !== "undefined" && document.cookie.includes("UserAuth")) {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   const handleSearchChange = (e: any) => {
     setSearchInput(e.target.value);
@@ -34,7 +39,6 @@ const MobileNavbar = () => {
       <ul className="flex justify-between p-2">
         <div className="flex gap-2 justify-center items-center">
           <HamburgerMenu />
-
           <img
             className="w-28"
             alt="logo"
