@@ -1,53 +1,75 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ProductsCategory } from "@/config.product";
-import MobileNavbar from "@/components/MobileNavbar";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import ItemCard from "@/components/ItemCard";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { setHomeProducts } from "@/lib/store/features/product/homeProductSlice";
 
-// Define the types for the product category and product items
-type ProductItem = {
-  name: string | null;
-  id: number;
+type Item = {
+  itemId: string;
+  title: string;
+  sales: number;
+  itemUrl: string;
+  image: string;
+  sku: {
+    def: {
+      price: number | null;
+      promotionPrice: number;
+    };
+  };
+  averageStarRate: number | null;
+  type: string;
 };
 
-type ProductCategory = {
+type SellingPoint = {
   name: string;
-  id: number;
-  list: ProductItem[];
+  id: string;
 };
 
-const productsCategory: ProductCategory[] = ProductsCategory;
+type Product = {
+  item: Item;
+  delivery: any; // replace 'any' with the appropriate type if known
+  sellingPoints: SellingPoint[];
+};
+
+type Obj = {
+  resultList: Product;
+};
 
 export default function Home() {
-  const [productData, setProductData] = useState<ProductCategory[]>([]);
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const [products, setProducts] = useState<any>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const dispatch = useAppDispatch();
+  const homeProducts = useAppSelector((state) => state.homeProducts.data);
 
   useEffect(() => {
-    console.log("STATUS : ", status);
-    console.log("SESSION : ", session);
-  }, [status, session]);
+    const getProducts = async () => {
+      try {
+        const options = {
+          method: "GET",
+          url: "https://ali-express-clone.onrender.com/api/home/moretolove",
+        };
+        const response = await axios.request(options);
+        dispatch(setHomeProducts(response.data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-  useEffect(() => {
-    // axios
-    //   .get("https://ali-express-clone.onrender.com/api/category")
-    //   .then(function (response) {
-    //     console.log(response.data.result.resultList);
-    //     setData(response.data.result.resultList);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-
-    // console.log(productsCategory);
-    setProductData(productsCategory);
+    getProducts();
   }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
   return (
     <main className="flex flex-col items-center">
@@ -58,6 +80,17 @@ export default function Home() {
         alt="banner"
         className="mt-10"
       />
+
+      <div>
+        <h1>More to Love</h1>
+        <div className="grid grid-cols-4 gap-4">
+          {products.map((product: any, index: number) => (
+            <div key={index}>
+              <ItemCard product={product} />
+            </div>
+          ))}
+        </div>
+      </div>
     </main>
   );
 }

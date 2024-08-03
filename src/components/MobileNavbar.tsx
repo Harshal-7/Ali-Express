@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import HamburgerMenu from "./HamburgerMenu";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { getProductsList } from "@/utils/getProduct";
 import { setProducts } from "@/lib/store/features/product/productSlice";
 import { useAppDispatch } from "@/lib/store/hooks";
@@ -14,7 +13,6 @@ const MobileNavbar = () => {
   const dispatch = useAppDispatch();
 
   const router = useRouter();
-  const session = useSession();
 
   const [searchInput, setSearchInput] = useState("");
 

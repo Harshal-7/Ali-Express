@@ -9,7 +9,7 @@ interface CartState {
 
 // Define the initial state using that type
 const initialState: CartState = {
-  data: JSON.parse(localStorage.getItem("cartItem")!) || [],
+  data: [],
 };
 
 export const cartItemSlice = createSlice({

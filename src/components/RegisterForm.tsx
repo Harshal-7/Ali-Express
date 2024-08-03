@@ -16,10 +16,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { register } from "@/actions/register";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import axios from "axios";
 
 const RegisterForm = () => {
   const [loading, setLoading] = useState(false);
@@ -35,25 +35,29 @@ const RegisterForm = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof RegisterSchema>) => {
+  const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
     setLoading(true);
-    register(data).then((res) => {
-      if (res.error) {
-        toast({
-          title: "User Registeration Failed",
-          description: res.error,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: res.success,
-          description: "Login to access dashboard",
-        });
-        setLoading(false);
-        router.replace(`/login`);
-      }
-    });
-    setLoading(false);
+
+    try {
+      const response = await axios.post(
+        "https://ali-express-clone.onrender.com/api/user/register",
+        data
+      ); // Send data to your API endpoint
+      console.log(response);
+      toast({
+        title: "Success",
+        description: "Registration successful. Please log in.",
+      });
+      router.replace(`/login`); // Redirect to login page
+    } catch (error: any) {
+      toast({
+        title: "Registration Failed",
+        description: error.response?.data?.message || "An error occurred.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

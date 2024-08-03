@@ -9,7 +9,7 @@ interface ProductState {
 
 // Define the initial state using that type
 const initialState: ProductState = {
-  data: [] || JSON.parse(localStorage.getItem("productList") as string),
+  data: [],
 };
 
 export const productsSlice = createSlice({
@@ -17,7 +17,7 @@ export const productsSlice = createSlice({
   initialState,
   reducers: {
     setProducts(state, action) {
-      state.data = action.payload.result?.resultList;
+      state.data = action.payload?.result?.resultList;
       let productList = JSON.stringify(current(state).data);
       localStorage.setItem("productList", productList);
     },

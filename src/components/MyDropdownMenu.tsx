@@ -38,7 +38,9 @@ export function MyDropdownMenu() {
 
   // Get Items from API
   const handleItemList = async (name: string | null) => {
-    const response = await getProductsList(name);
+    const response = await axios.get(
+      `https://ali-express-clone.onrender.com/api/category/${name}`
+    );
     dispatch(setProducts(response?.data));
 
     //TODO : REMOVE

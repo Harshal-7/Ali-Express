@@ -13,7 +13,7 @@ export const getProductsList = async (name: string | null) => {
       currency: "USD",
     },
     headers: {
-      "x-rapidapi-key": "8fd9fec7d6msh253b64b0b38c2abp1ddf82jsn09344b5aaefc",
+      // "x-rapidapi-key": "678a154090msh3f619b749538c49p173568jsn746fce7ca737",
       "x-rapidapi-host": "aliexpress-datahub.p.rapidapi.com",
     },
   };
@@ -37,7 +37,7 @@ export const getProductInfo = async (id: Number | undefined) => {
       locale: "en_US",
     },
     headers: {
-      "x-rapidapi-key": "8fd9fec7d6msh253b64b0b38c2abp1ddf82jsn09344b5aaefc",
+      // "x-rapidapi-key": "678a154090msh3f619b749538c49p173568jsn746fce7ca737",
       "x-rapidapi-host": "aliexpress-datahub.p.rapidapi.com",
     },
   };
@@ -46,6 +46,22 @@ export const getProductInfo = async (id: Number | undefined) => {
     console.log("ID IS : ", id);
 
     const response = await axios.request(options);
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getHomepageProducts = async () => {
+  const options = {
+    method: "GET",
+    url: "https://ali-express-clone.onrender.com/api/home/moretolove",
+  };
+
+  try {
+    const response = await axios.request(options);
+    console.log("RESONSE : ", response);
+
     return response;
   } catch (error) {
     console.error(error);
