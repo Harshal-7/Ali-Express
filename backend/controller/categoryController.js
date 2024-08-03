@@ -34,8 +34,8 @@ export const getSubCategoryProductList = asyncHandler(async (req, res) => {
                 page: page
             },
             headers: {
-                'x-rapidapi-host': 'aliexpress-datahub.p.rapidapi.com',
-                'x-rapidapi-key': 'b71cd9dfe8msh2957ecdad92deffp170a1ejsn05f6232668a7'
+                "x-rapidapi-key": API_KEY,
+                "x-rapidapi-host": HOST
             }
         })
 

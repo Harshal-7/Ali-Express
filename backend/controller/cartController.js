@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 
-export const addToCart = async(req,res)=>{
+export const addToCart = async (req,res)=>{
     try {
         const { productId, title, price,
             image, quantity, size
@@ -16,20 +16,17 @@ export const addToCart = async(req,res)=>{
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
-
+        
         const cartItem = user.cart.find((item) =>
             item.productId === productId && item.size === size
         )
-
-        if (cartItem) {
-            cartItem.quantity += quantity
-        } else {
+            // directly add the to cart array because the already existing
+            // logic is handled at fron-end
             user.cart.push({
                 productId, title, price, image, quantity, size
             })
-        }
-
-        // Save the updated user
+        
+        // Save the user
         await user.save();
 
         res.status(200).json({ success: true, message: 'Item added to cart', cart: user.cart });
@@ -57,4 +54,67 @@ export const getCartData = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error: Unable to fetch cart data' });
     }
 
+}
+
+
+// to handle the update cart
+export const getUpdatedcart = async (req, res) => {
+    const userId = req.userId
+
+    const { productId } = req.params
+    const { quantity } = req.body;
+    // console.log(productId, quantity)
+
+    try {
+        const user = await User.findById(userId);
+        const cartItem = user.cart.find(item => item.productId === productId);
+
+        if (cartItem) {
+            cartItem.quantity = quantity;
+            await user.save();
+            res.json({ message: 'Cart updated', cart: user.cart });
+        } else {
+            res.status(404).json({ message: 'Item not found in cart' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+
+
+// to remove one item from cart
+export const removeOneItem = async (req, res) => {
+    const userId = req.userId
+    const { productId } = req.params
+
+    try {
+        const user = await User.findById(userId);
+        const cartItemIndex = user.cart.findIndex(item => item.productId === productId);
+
+        if (cartItemIndex !== -1) {
+            user.cart.splice(cartItemIndex, 1);  // Remove the item from cart
+            await user.save();
+            res.json({ message: 'Item removed from cart', cart: user.cart });
+        } else {
+            res.status(404).json({ message: 'Item not found in cart' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+
+// to remove all items from cart
+
+export const removeAllItem = async (req, res) => {
+    const userId = req.userId;  // Assuming user ID is available in req.user
+
+    try {
+        const user = await User.findById(userId);
+
+        user.cart = [];  // Clear the cart
+        await user.save();
+        res.json({ message: 'All items removed from cart', cart: user.cart });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
 }

@@ -1,5 +1,6 @@
 import express from 'express'
-import { Login, register } from '../controller/userController.js'
+import { Login, logout, register } from '../controller/userController.js'
+import { authMiddleware } from '../middleware/authMiddleware.js'
 
 
 const userRouter = express.Router()
@@ -10,6 +11,9 @@ userRouter.post('/user/register' , register)
 
 // for making request to log in 
 userRouter.post('/user/login', Login)
+
+// for making request to logout
+userRouter.get(`/user/logout`, authMiddleware, logout)
 
 
 export default userRouter
