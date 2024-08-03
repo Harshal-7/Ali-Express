@@ -5,6 +5,7 @@ import userRouter from './routes/userRoute.js';
 import cartRouter from './routes/cartRoute.js';
 import cookieParser from "cookie-parser";
 import wishlistRouter from './routes/wishListRoute.js';
+import homeRouter from './routes/homeRoute.js';
 
 
 const app = express()
@@ -17,6 +18,10 @@ app.use(cookieParser()); // Parse cookies from incoming requests
 
 
 // route management
+
+// for home page
+app.use(`/api`, homeRouter)
+
 // for categories
 app.use('/api', categoryRouter )
 
