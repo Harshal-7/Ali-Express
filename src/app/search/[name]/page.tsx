@@ -1,15 +1,10 @@
 "use client";
 
-import axios from "axios";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import ItemCard from "@/components/ItemCard";
-import { ProductsCategory } from "@/config.product";
 import { useAppSelector } from "@/lib/store/hooks";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { ArrowRight, ChevronsUpDown, ShoppingCart } from "lucide-react";
+
+import { ChevronsUpDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 const ProductList = ({ params }: { params: { name: String } }) => {

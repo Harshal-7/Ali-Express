@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import FormError from "@/components/auth/FormError";
 import { Loader2 } from "lucide-react";
@@ -27,12 +27,6 @@ import Cookies from "js-cookie";
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
-  const searchParams = useSearchParams();
-  var urlError =
-    searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already in use with different provider!"
-      : "";
 
   const { toast } = useToast();
 
@@ -111,7 +105,6 @@ const LoginForm = () => {
                 </FormItem>
               )}
             />
-            <FormError message={urlError} />
 
             <Button
               type="submit"
