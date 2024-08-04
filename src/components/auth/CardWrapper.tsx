@@ -7,8 +7,8 @@ import Header from "./Header";
 interface CardWrapperProps {
   children: React.ReactNode;
   headerLabel: string;
-  backButtonLabel: string;
-  backButtonHref: string;
+  backButtonLabel?: string;
+  backButtonHref?: string;
 }
 
 const CardWrapper = ({
@@ -18,14 +18,18 @@ const CardWrapper = ({
   backButtonHref,
 }: CardWrapperProps) => {
   return (
-    <Card className="border-none shadow-none">
-      <CardHeader className="p-2">
+    <Card className="hover:border hover:shadow-md bg-gray-100/45 p-5">
+      <CardHeader className="p-2 mb-8">
         <Header label={headerLabel} />
       </CardHeader>
       <CardContent>{children}</CardContent>
 
+      <CardFooter>
+        <BackButton href={backButtonHref} label={backButtonLabel} />
+      </CardFooter>
+
       <CardFooter className="py-0">
-        <p className="text-xs mt-4 text-muted-foreground">
+        <p className="text-xs mt-6 text-muted-foreground">
           By continuing, you confirm that you‘re an adult and you’ve read and
           accepted our
           <a

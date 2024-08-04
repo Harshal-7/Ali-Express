@@ -4,25 +4,31 @@ import { Menu, Search, ShoppingCart, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import HamburgerMenu from "./HamburgerMenu";
-import { ProductsCategory } from "@/config.product";
-
-// Define the types for the product category and product items
-type ProductItem = {
-  name: string | null;
-  id: number;
-};
-
-type ProductCategory = {
-  name: string;
-  id: number;
-  list: ProductItem[];
-};
-
-const productsCategory: ProductCategory[] = ProductsCategory;
+import { useRouter } from "next/navigation";
+import { getProductsList } from "@/utils/getProduct";
+import { setProducts } from "@/lib/store/features/product/productSlice";
+import { useAppDispatch } from "@/lib/store/hooks";
 
 const MobileNavbar = () => {
+  const dispatch = useAppDispatch();
+
+  const router = useRouter();
+
+  const [searchInput, setSearchInput] = useState("");
+
+  const handleSearchChange = (e: any) => {
+    setSearchInput(e.target.value);
+  };
+
+  const handleSearch = async () => {
+    const response = await getProductsList(searchInput);
+    dispatch(setProducts(response?.data));
+    setSearchInput("");
+    router.push(`/search/${searchInput}`);
+  };
+
   return (
-    <nav className="flex md:hidden flex-col w-full p-2 sticky top-0 left-0 z-50">
+    <nav className="flex md:hidden flex-col w-full p-2 sticky top-0 left-0 z-50 bg-background">
       <ul className="flex justify-between p-2">
         <div className="flex gap-2 justify-center items-center">
           <HamburgerMenu />
@@ -44,10 +50,13 @@ const MobileNavbar = () => {
       </ul>
       <div className="w-full p-2 relative">
         <Input
-          className="rounded-full bg-gray-200 px-4"
+          className="rounded-full bg-gray-200 text-black px-4"
           placeholder="smart watches for men"
+          onChange={handleSearchChange}
         />
-        <Search className="absolute top-[18px] right-5 text-gray-700 w-5 h-5" />
+        <button onClick={handleSearch}>
+          <Search className="absolute top-[18px] right-5 text-gray-700 w-5 h-5" />
+        </button>
       </div>
     </nav>
   );
