@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
+import Loading from "@/components/Loading";
 
 const ProductDescription = ({ params }: { params: { id: Number } }) => {
   const [product, setProduct] = useState<any>();
@@ -159,7 +160,7 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
   };
 
   if (!product) {
-    return <div>Loading</div>;
+    return <Loading />;
   }
 
   return (
@@ -325,25 +326,27 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
       <div>
         <div className="w-full">
           <Tabs defaultValue="1" className="w-full mt-10 mb-20">
-            <TabsList className="flex md:grid md:grid-cols-3 md:w-1/2">
+            <TabsList className="flex flex-wrap md:grid md:grid-cols-3 md:w-1/2">
               <TabsTrigger className="" value="1">
                 Specifications
               </TabsTrigger>
-              <TabsTrigger className="" value="2">
-                Customer Reviews
-              </TabsTrigger>
               <TabsTrigger className="" value="3">
                 Description
+              </TabsTrigger>
+              <TabsTrigger className="" value="2">
+                Customer Reviews
               </TabsTrigger>
             </TabsList>
 
             {/* Specifications */}
             <TabsContent value="1">
-              <Card className="border-none shadow-none">
+              <Card className="border-none shadow-none mt-8 md:mt-0">
                 <CardHeader>
                   <CardTitle>Specifications</CardTitle>
                 </CardHeader>
-                <CardContent className="flex flex-wrap w-full">
+
+                {/* SPECIFICATIONS FOR BIGGER SCREENS  */}
+                <CardContent className="hidden md:flex flex-wrap w-full">
                   <div className="w-1/2">
                     <Table>
                       <TableBody>
@@ -357,7 +360,7 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
                               <TableCell className="bg-accent">
                                 {property.name}
                               </TableCell>
-                              <TableCell className="text-left">
+                              <TableCell className="text-left ">
                                 {property.value}
                               </TableCell>
                             </TableRow>
@@ -384,12 +387,32 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
                     </Table>
                   </div>
                 </CardContent>
+
+                {/* SPECIFICATIONS FOR MOBILE DEVICES  */}
+                <CardContent className="flex flex-wrap w-full md:hidden">
+                  <Table>
+                    <TableBody className="">
+                      {product.properties.list.map(
+                        (property: any, index: any) => (
+                          <TableRow key={index}>
+                            <TableCell className="bg-accent">
+                              {property.name}
+                            </TableCell>
+                            <TableCell className="text-left line-clamp-1">
+                              {property.value}
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
               </Card>
             </TabsContent>
 
             {/* Customer Reviews  */}
             <TabsContent value="2">
-              <Card className="border-none shadow-none">
+              <Card className="border-none shadow-none mt-8">
                 <CardHeader>
                   <CardTitle> Customer Reviews (0)</CardTitle>
                 </CardHeader>

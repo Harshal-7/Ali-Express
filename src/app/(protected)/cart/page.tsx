@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 import {
   Card,
@@ -17,8 +18,19 @@ import { ShoppingCart, Trash } from "lucide-react";
 const CartPage = () => {
   const [totalCost, setTotalCost] = useState(0);
   const [items, setItems] = useState<any>();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const router = useRouter();
+
+  // check whether user is logged in or not if not redirect to login page
+  useEffect(() => {
+    const token = Cookies.get("UserAuth");
+    setIsAuthenticated(!!token);
+
+    if (!isAuthenticated) {
+      router.push("/login");
+    }
+  }, []);
 
   // get all products from cart-database and add them to state
   useEffect(() => {
@@ -104,7 +116,7 @@ const CartPage = () => {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto flex justify-center items-start gap-5 mt-10">
+    <div className="w-full md:max-w-7xl md:mx-auto flex flex-col md:flex-row justify-center items-center md:items-start gap-5 md:mt-10">
       <Card className="w-full max-w-5xl">
         <CardHeader>
           <CardTitle>Shopping Cart ({items ? items.length : 0})</CardTitle>
@@ -119,20 +131,25 @@ const CartPage = () => {
         <CardContent className="flex flex-col gap-10 mt-10">
           {items && items.length > 0 ? (
             items.map((item: any, index: number) => (
-              <div key={index} className="flex items-start gap-8 mb-5">
-                <div className="w-44 h-44 relative rounded-md flex-shrink-0">
+              <div
+                key={index}
+                className="flex items-center md:items-start gap-8 mb-5"
+              >
+                <div className="w-20 md:w-44 h-20 md:h-44 relative rounded-md flex-shrink-0">
                   <img
                     src={item.image}
                     alt="img"
                     className="w-full h-full object-cover rounded-md"
                   />
                 </div>
-                <div className="flex flex-col gap-4 flex-1">
+                <div className="flex flex-col gap-2 md:gap-4 flex-1">
                   <button
                     onClick={() => handleProductInfo(item)}
                     className="text-start"
                   >
-                    <div className="line-clamp-2">{item.title}</div>
+                    <div className="line-clamp-1 md:line-clamp-2">
+                      {item.title}
+                    </div>
                   </button>
 
                   <div className="font-bold">₹ {item.price.toFixed(2)}</div>
@@ -142,7 +159,7 @@ const CartPage = () => {
                   </div>
                 </div>
                 <button onClick={() => removeProductById(item)}>
-                  <Trash className="w-6 h-6 hover:text-red-500" />
+                  <Trash className="w-5 md:w-6 h-5 md:h-6 hover:text-red-500" />
                 </button>
               </div>
             ))

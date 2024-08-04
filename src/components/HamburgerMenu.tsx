@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -10,28 +11,16 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import { ProductsCategory } from "@/config.product";
+import { HamburberCategory, ProductsCategory } from "@/config.product";
 import { Separator } from "@/components/ui/separator";
-
-type ProductItem = {
-  name: string | null;
-  id: number;
-};
-
-type ProductCategory = {
-  name: string;
-  id: number;
-  list: ProductItem[];
-};
-
-const productsCategory: ProductCategory[] = ProductsCategory;
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const HamburgerMenu = () => {
-  const [data, setData] = useState<ProductCategory[]>([]);
+  const [data, setData] = useState<any>([]);
 
   useEffect(() => {
-    // console.log(productsCategory);
-    setData(productsCategory);
+    setData(HamburberCategory);
   }, []);
 
   return (
@@ -43,15 +32,20 @@ const HamburgerMenu = () => {
         <Separator className="my-1 mt-12" />
         <SheetHeader className="mt-6">
           <SheetTitle className="text-base font-normal flex flex-col gap-5 text-start ">
-            {data.map((item, index) => (
-              <div key={index}>
-                <div key={index} className="">
-                  {item.name}
-                </div>
-                <Separator className="my-1" />
-              </div>
+            {data.map((item: any, index: any) => (
+              <Link href={`/search/${item.name}`} key={index} className="">
+                <SheetClose className="flex gap-5 justify-start items-center">
+                  <img
+                    src={item.img}
+                    alt="img"
+                    className="w-12 h-12 object-contain rounded-lg"
+                  />
+                  <div className="text-xl text-start">{item.name}</div>
+                </SheetClose>
+              </Link>
             ))}
           </SheetTitle>
+          <Separator className="my-1 mt-12" />
 
           <SheetDescription></SheetDescription>
         </SheetHeader>

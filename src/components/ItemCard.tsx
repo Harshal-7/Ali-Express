@@ -39,11 +39,11 @@ const ItemCard = ({ product }: { product: any }) => {
   return (
     <div
       key={product.item.key}
-      className="flex flex-col group hover:border hover:shadow-lg relative w-[140px] md:w-[250px] h-[200px] md:h-[350px] overflow-hidden group rounded-lg"
+      className="flex flex-col gap-2 md:gap-0 group hover:border hover:shadow-lg relative w-[180px] md:w-[250px] h-[260px] md:h-[350px] overflow-hidden group rounded-lg"
     >
       <div
         key={product.item.key}
-        className="relative w-[140px] md:w-[250px] h-[200px] md:h-[350px] overflow-hidden group rounded-lg"
+        className="relative w-[180px] md:w-[250px] h-[260px] md:h-[350px] overflow-hidden group rounded-lg"
       >
         <Link href={`/products/${product.item.itemId}`}>
           <img
@@ -56,7 +56,7 @@ const ItemCard = ({ product }: { product: any }) => {
 
       <div
         key={product.item.key}
-        className="tracking-wider mt-4 mb-1 flex gap-2 items-center pl-2"
+        className="hidden md:flex tracking-wider mt-4 mb-1 gap-2 items-center pl-2"
       >
         <Link
           href={`/products/${product.item.itemId}`}
@@ -67,7 +67,7 @@ const ItemCard = ({ product }: { product: any }) => {
       </div>
       <div
         key={product.item.key}
-        className="text-xs tracking-widest font-bold pl-2 mb-5 mt-2 flex justify-between items-center"
+        className="hidden md:flex text-xs tracking-widest font-bold pl-2 mb-5 mt-2 justify-between items-center"
       >
         <div>
           <span> ₹ </span>
@@ -79,6 +79,25 @@ const ItemCard = ({ product }: { product: any }) => {
           <ShoppingCart className="w-5 sm:w-12 h-10 sm:h-12 absolute bottom-2 right-2 bg-white sm:p-3 rounded-full sm:hover:bg-black sm:hover:text-white align-middle" />
         </button>
       </div>
+
+      <Link
+        href={`/products/${product.item.itemId}`}
+        key={product.item.key}
+        className="flex md:hidden text-xl tracking-wide pl-2 justify-start items-center gap-1"
+      >
+        <p className="text-base"> ₹ </p>
+        <div className="md:text-xl">
+          {(product.item.sku.def.promotionPrice * 83).toFixed(2)}
+        </div>
+      </Link>
+
+      <Link
+        href={`/products/${product.item.itemId}`}
+        key={product.item.key}
+        className="flex md:hidden tracking-tight gap-2 pl-2"
+      >
+        <p className="text-xs line-clamp-1">{product.item.title}</p>
+      </Link>
     </div>
   );
 };

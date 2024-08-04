@@ -1,3 +1,56 @@
+export const HamburberCategory = [
+  {
+    name: "Shirts",
+    id: 348,
+    img: "https://ae-pic-a1.aliexpress-media.com/kf/S4878dac540e94f1587bfeaafca82573bE/6797-Men-s-Vintage-Patchwork-Shirt-Spring-Fall-Fashion-Japan-Style-High-Quality-Cargo-Long-Sleeve.jpg_.webp",
+  },
+  {
+    name: "Jeans",
+    id: 200000361,
+    img: "https://ae-pic-a1.aliexpress-media.com/kf/S5c50d44b3795488caf8f291eaf97e4763/Women-jeans-Daisy-Embroidery-Denim-Jean-High-Waist-Jeans-Plus-Size-Denim-Harem-Trousers-Mujer-Vintage.jpg_.webp",
+  },
+  {
+    name: "Hoodies & Sweatshirts",
+    id: 200000344,
+    img: "https://ae-pic-a1.aliexpress-media.com/kf/Hc5e96b75a7784f1bb1bdc75ea114839cD/Mens-Hip-Hop-Streetwear-Harajuku-Tie-dye-Sweater-Vintage-Retro-Japanese-Style-Anime-Girl-Knitted-Sweater.jpg_.webp",
+  },
+  {
+    name: "Shorts",
+    id: 200000367,
+    img: "https://ae-pic-a1.aliexpress-media.com/kf/Sae66342383ad45ef98d04f85c03eff77s/Rose-Red-High-Waist-denim-Shorts-2023-Summer-Fashion-Split-Thin-Button-All-Match-A-line.jpg_.webp",
+  },
+  {
+    name: "Tops & Tees",
+    id: 200000778,
+    img: "https://ae-pic-a1.aliexpress-media.com/kf/HTB1n3XaSr2pK1RjSZFsq6yNlXXax/Low-High-Design-Elegant-Spring-Summer-Long-Sleeve-Shirts-Women-2022-Korean-Style-Casual-Double-Pockets.jpg_.webp",
+  },
+  {
+    name: "Men's Watches",
+    id: 200362146,
+    img: "https://ae-pic-a1.aliexpress-media.com/kf/S4a6d6c8389e345de918be7e0f7d4ab7dk/PAGANI-DESIGN-Women-s-Watches-Top-Brand-Luxury-Ladies-Watch-Fashion-Simple-Wrist-watch-Women-Waterproof.jpg_.webp",
+  },
+  {
+    name: "Women's Shoes",
+    id: 200133142,
+    img: "https://ae-pic-a1.aliexpress-media.com/kf/Sced2a18201cf4462a9a8b43d02faed51n/361-Degree-men-sneakers-basketball-shoes-walking-sneakers-cushion-men-s-sports-shoe-Basket-2021-AG1.jpg_.webp",
+  },
+  {
+    name: "Men's Shoes",
+    id: 200131145,
+    img: "https://ae-pic-a1.aliexpress-media.com/kf/Hc1d79a0f67dd48659c9ff3a35796336bY/2021-new-design-100-real-genuine-snake-skin-python-leather-leisure-loafer-shoe-cow-skin-lining.jpg_.webp",
+  },
+  {
+    name: "Camera & Photo",
+    id: 100000305,
+    img: "https://ae-pic-a1.aliexpress-media.com/kf/Sb0bd0c5b21c14e8494a0a4029f6f3279l/Digital-Camera-Portable-Camera-48-Million-Pixels-High-Definition-Small-Mini-Camera-DC600-Digital-Camera.jpg_.webp",
+  },
+  {
+    name: "Games and Puzzles",
+    id: 200001726,
+    img: "https://ae-pic-a1.aliexpress-media.com/kf/H5937691222854250b5488c61c953aebfz/Free-Shipping-EPP-Airplane-Model-Cessna-RC-Foam-Airplane-Plane-Models-Wingspan-960mm-EPP-Slow-Flyer.jpg_.webp",
+  },
+];
+
 export const ProductsCategory = [
   {
     name: "Women's Clothing",

@@ -16,7 +16,7 @@ export default function Home() {
           url: "https://ali-express-clone.onrender.com/api/home/moretolove",
         };
         const response = await axios.request(options);
-        setProducts(response.data); 
+        setProducts(response.data);
       } catch (error) {
         console.log("Error while fetching home-products", error);
       }
@@ -32,14 +32,14 @@ export default function Home() {
         height={200}
         src="/banner.jpg"
         alt="banner"
-        className="mt-10"
+        className="mt-10 hidden md:block"
       />
 
       <div className="w-full max-w-screen-2xl">
-        <h1 className="mt-14 mb-5 font-bold text-2xl text-center md:text-start">
+        <h1 className=" md:mt-14 mb-2 md:mb-5 font-bold md:text-2xl text-center md:text-start">
           More to Love
         </h1>
-        <div className="flex flex-wrap gap-5 md:gap-10 justify-center md:justify-start">
+        <div className="flex flex-wrap gap-y-5 gap-x-2 md:gap-10 justify-center md:justify-start">
           {products &&
             products.map((product: any, index: number) => (
               <div key={index}>
