@@ -12,8 +12,9 @@ const ItemCard = ({ product }: { product: any }) => {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cartItems.data);
 
-  const handleCartButton = async (item: any) => {
-    console.log("MY ITEM : ", item);
+  // Add product to cart
+  const handleAddToCart = async (item: any) => {
+    console.log("Inside handleAddToCart: ", item);
     dispatch(setCartItems(item));
 
     await axios.post(
@@ -38,7 +39,7 @@ const ItemCard = ({ product }: { product: any }) => {
   return (
     <div
       key={product.item.key}
-      className="flex flex-col group hover:border hover:shadow-md relative w-[140px] md:w-[250px] h-[200px] md:h-[350px] overflow-hidden group rounded-lg"
+      className="flex flex-col group hover:border hover:shadow-lg relative w-[140px] md:w-[250px] h-[200px] md:h-[350px] overflow-hidden group rounded-lg"
     >
       <div
         key={product.item.key}
@@ -48,7 +49,7 @@ const ItemCard = ({ product }: { product: any }) => {
           <img
             src={product.item.image}
             alt="img"
-            className="w-full h-full object-cover transition-transform duration-300 "
+            className="w-full h-full object-cover transition-transform duration-300 border rounded-lg"
           />
         </Link>
       </div>
@@ -74,7 +75,7 @@ const ItemCard = ({ product }: { product: any }) => {
             {(product.item.sku.def.promotionPrice * 83).toFixed(2)}
           </span>
         </div>
-        <button onClick={() => handleCartButton(product.item)}>
+        <button onClick={() => handleAddToCart(product.item)}>
           <ShoppingCart className="w-5 sm:w-12 h-10 sm:h-12 absolute bottom-2 right-2 bg-white sm:p-3 rounded-full sm:hover:bg-black sm:hover:text-white align-middle" />
         </button>
       </div>

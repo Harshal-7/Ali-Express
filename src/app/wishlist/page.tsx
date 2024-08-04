@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-
 import {
   Card,
   CardContent,
@@ -14,9 +13,8 @@ import {
 } from "@/components/ui/card";
 import { ShoppingCart, Trash } from "lucide-react";
 
-const CartPage = () => {
-  const [totalCost, setTotalCost] = useState(0);
-  const [items, setItems] = useState<any>();
+const WishListPage = () => {
+  const [wishlistItems, setWishlistItems] = useState<any>();
 
   const router = useRouter();
 
@@ -25,15 +23,15 @@ const CartPage = () => {
     const fetchCartDetails = async () => {
       try {
         const response = await axios.get(
-          "https://ali-express-clone.onrender.com/api/cart/data",
+          "https://ali-express-clone.onrender.com/api/wishlist/data",
           {
             headers: {
               Authorization: document.cookie,
             },
           }
         );
-        const data = response.data?.cart;
-        setItems(data);
+        const data = response.data?.wishlist;
+        setWishlistItems(data);
       } catch (error) {
         console.log("ERROR : ", error);
       }
@@ -41,18 +39,6 @@ const CartPage = () => {
 
     fetchCartDetails();
   }, []);
-
-  // update total cost after adding products to state
-  useEffect(() => {
-    let cost = 0;
-    if (items) {
-      items.forEach((item: any) => {
-        cost += Number(item.price) * item.quantity;
-      });
-    }
-    setTotalCost(cost);
-    console.log("cart items : ", items);
-  }, [items, totalCost]);
 
   const removeAllProducts = async () => {
     try {
@@ -65,38 +51,36 @@ const CartPage = () => {
           },
         }
       );
-
       console.log("ALL PRODUCTS REMOVED SUCCESSFULLY");
-
       const data = response.data?.cart;
-      setItems(data);
+      setWishlistItems(data);
     } catch (error) {
       console.log("ERROR : ", error);
     }
   };
 
   // dispatch(removeCartItem(id));
-  const removeProductById = async (item: any) => {
-    const id = Number(item.productId);
-    try {
-      const response = await axios.delete(
-        `https://ali-express-clone.onrender.com/api/cart/removeone/${id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: document.cookie,
-          },
-        }
-      );
+  //   const removeProductById = async (item: any) => {
+  //     const id = Number(item.productId);
+  //     try {
+  //       //   const response = await axios.delete(
+  //       //     `https://ali-express-clone.onrender.com/api/cart/removeone/${id}`,
+  //       //     {
+  //       //       headers: {
+  //       //         "Content-Type": "application/json",
+  //       //         Authorization: document.cookie,
+  //       //       },
+  //       //     }
+  //       //   );
 
-      console.log("REMOVED SUCCESSFULLY");
+  //       console.log("REMOVED SUCCESSFULLY");
 
-      const data = response.data?.cart;
-      setItems(data);
-    } catch (error) {
-      console.log("ERROR : ", error);
-    }
-  };
+  //       const data = response.data?.cart;
+  //       setItems(data);
+  //     } catch (error) {
+  //       console.log("ERROR : ", error);
+  //     }
+  //   };
 
   const handleProductInfo = (item: any) => {
     const id = Number(item.productId);
@@ -107,18 +91,20 @@ const CartPage = () => {
     <div className="w-full max-w-7xl mx-auto flex justify-center items-start gap-5 mt-10">
       <Card className="w-full max-w-5xl">
         <CardHeader>
-          <CardTitle>Shopping Cart ({items ? items.length : 0})</CardTitle>
-          {items && items.length > 0 && (
-            <CardDescription className="self-end hover:text-red-500">
+          <CardTitle>
+            Wish List ({wishlistItems ? wishlistItems.length : 0})
+          </CardTitle>
+          {wishlistItems && wishlistItems.length > 0 && (
+            <CardDescription className="self-end hover:text-red-500 hover:font-bold transition-all duration-300">
               <button onClick={removeAllProducts} className="">
-                Remove All Products
+                Remove all products from wishlist
               </button>
             </CardDescription>
           )}
         </CardHeader>
         <CardContent className="flex flex-col gap-10 mt-10">
-          {items && items.length > 0 ? (
-            items.map((item: any, index: number) => (
+          {wishlistItems && wishlistItems.length > 0 ? (
+            wishlistItems.map((item: any, index: number) => (
               <div key={index} className="flex items-start gap-8 mb-5">
                 <div className="w-44 h-44 relative rounded-md flex-shrink-0">
                   <img
@@ -135,14 +121,13 @@ const CartPage = () => {
                     <div className="line-clamp-2">{item.title}</div>
                   </button>
 
-                  <div className="font-bold">₹ {item.price.toFixed(2)}</div>
-
-                  <div className="flex flex-col gap-2">
-                    <div> Quantity: {item.quantity}</div>
-                  </div>
+                  <div className="font-bold">₹ {item.price}</div>
                 </div>
-                <button onClick={() => removeProductById(item)}>
-                  <Trash className="w-6 h-6 hover:text-red-500" />
+                <button className="bg-accent py-2 px-4 rounded-lg hover:font-bold transition-all duration-300">
+                  Move to cart
+                </button>
+                <button className="py-2 px-2 rounded-lg">
+                  <Trash className="w-6 h-6 hover:text-red-500 transition-all duration-300" />
                 </button>
               </div>
             ))
@@ -162,24 +147,8 @@ const CartPage = () => {
           )}
         </CardContent>
       </Card>
-
-      {/* SUMMARY / TOTAL-COST */}
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Summary</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-10 mt-10">
-          <div className="flex justify-between font-bold">
-            <div>Total</div>
-            <div>₹ {totalCost.toFixed(2)}</div>
-          </div>
-          <button className="w-full px-5 py-3 rounded-3xl bg-red-500 text-white font-bold hover:font-extrabold transition-all duration-300">
-            Checkout ({items ? items.length : 0})
-          </button>
-        </CardContent>
-      </Card>
     </div>
   );
 };
 
-export default CartPage;
+export default WishListPage;

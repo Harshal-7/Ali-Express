@@ -1,27 +1,10 @@
 "use client";
 
 import axios from "axios";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import ItemCard from "@/components/ItemCard";
-import { myProduct, Product, ProductsCategory } from "@/config.product";
-import { useAppSelector } from "@/lib/store/hooks";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import {
-  ArrowRight,
-  ChevronsUpDown,
-  Heart,
-  Lock,
-  Minus,
-  Plus,
-  Share2,
-  ShoppingCart,
-} from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import { getProductInfo } from "@/utils/getProduct";
-import { ProductImageCarousel } from "@/components/ProductImageCarousel";
+
+import { Button } from "@/components/ui/button";
+import { Heart, Lock, Minus, Plus, Share2, ShoppingCart } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -37,10 +20,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -51,115 +30,143 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-type ProductProperty = {
-  name: string;
-  value: string;
-};
-
-type SKUItem = {
-  skuId: string;
-  propMap: string;
-  price: number;
-  promotionPrice: number;
-  quantity: number;
-  ext: string;
-};
-
-type SKUPropValue = {
-  vid: number;
-  name: string;
-  image?: string;
-  propTips?: string;
-};
-
-type SKUProp = {
-  pid: number;
-  name: string;
-  values: SKUPropValue[];
-};
-
-type CartProps = {
-  productId: string;
-  title: string;
-  price: number;
-  image: string;
-  quantity: number;
-  size: number;
-};
-
-type ProductInterface = {
-  available: boolean;
-  itemId: string;
-  title: string;
-  catId: number;
-  sales: string;
-  wishCount: number;
-  itemUrl: string;
-  images: string[];
-  video: {
-    id: number;
-    thumbnail: string;
-    url: string;
-  };
-  properties: {
-    cut: string;
-    list: ProductProperty[];
-  };
-  description: {
-    html: string;
-    images: string[];
-  };
-  sku: {
-    def: {
-      quantity: number;
-      price: number;
-      promotionPrice: number;
-      vat: {
-        desc: string;
-      };
-      unit: string;
-      isBulk: boolean;
-    };
-    base: SKUItem[];
-    props: SKUProp[];
-    skuImages: Record<string, string>;
-  };
-};
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/components/ui/use-toast";
 
 const ProductDescription = ({ params }: { params: { id: Number } }) => {
-  const [product, setProduct] = useState<ProductInterface>();
+  const [product, setProduct] = useState<any>();
   const [quantity, setQuantity] = useState(1);
-  const [cartObject, setCartObject] = useState<any>();
+  const [updateCart, setUpdateCart] = useState(false);
+  const [isAddedToWishlist, setIsAddedToWishlist] = useState(false);
+
+  const { toast } = useToast();
 
   useEffect(() => {
+    // API call to fetch product details
+    const handleProductInfo = async (itemId: any) => {
+      const response = await axios.get(
+        `https://ali-express-clone.onrender.com/api/product/${itemId}`
+      );
+
+      setProduct(response?.data?.item);
+      console.log("PRODUCT DESCRIPTION : ", response?.data?.item);
+      // setQuantity()
+    };
+
     const itemId = Number(params.id);
     handleProductInfo(itemId);
   }, []);
 
-  // API call to fetch product details
-  const handleProductInfo = async (itemId: any) => {
-    const response = await axios.get(
-      `https://ali-express-clone.onrender.com/api/product/${itemId}`
-    );
-
-    setProduct(response?.data?.item);
-    setCartObject({ productId: product?.itemId });
-    console.log("PRODUCT DESCRIPTION : ", response?.data?.item);
+  // Add Item To Cart
+  const handleCart = async () => {
+    try {
+      await axios.post(
+        "https://ali-express-clone.onrender.com/api/cart/add",
+        {
+          productId: `${product.itemId}`,
+          title: `${product.title}`,
+          price: (product.sku.def.promotionPrice * 83).toFixed(2),
+          image: `${product.images[0]}`,
+          quantity: quantity,
+          size: "m",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: document.cookie,
+          },
+        }
+      );
+    } catch (error) {
+      console.log("ERROR adding to cart : ", error);
+    }
+    setUpdateCart(true);
   };
 
-  const handleCart = () => {
-    
+  // Update item quantity inside cart
+  const handleUpdateCart = async () => {
+    try {
+      const res = await axios.patch(
+        `https://ali-express-clone.onrender.com/api/cart/${product.itemId}`,
+        {
+          productId: `${product.itemId}`,
+          quantity: quantity,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: document.cookie,
+          },
+        }
+      );
+
+      toast({
+        title: "Cart updated successfully",
+        className: "text-red-600 bg-white hover:bg-gray-100 font-bold",
+      });
+    } catch (error) {
+      console.log("ERROR updating cart : ", error);
+    }
+  };
+
+  const handleRemoveFromWishlist = async () => {
+    try {
+      await axios.delete(
+        `https://ali-express-clone.onrender.com/api/wishlist/removeone/${product.itemId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: document.cookie,
+          },
+        }
+      );
+    } catch (error) {
+      console.log("ERROR removing from wishlist : ", error);
+    }
+  };
+
+  const handleWishList = async () => {
+    if (isAddedToWishlist) {
+      handleRemoveFromWishlist();
+      return;
+    }
+    try {
+      await axios.post(
+        "https://ali-express-clone.onrender.com/api/wishlist/add",
+        {
+          productId: `${product.itemId}`,
+          title: `${product.title}`,
+          price: (product.sku.def.promotionPrice * 83).toFixed(2),
+          image: `${product.images[0]}`,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: document.cookie,
+          },
+        }
+      );
+    } catch (error) {
+      console.log("ERROR adding to wishlist : ", error);
+    }
+    setUpdateCart(true);
+    setIsAddedToWishlist(true);
+  };
+
+  const handleClick = (e: any) => {
+    e.currentTarget.disabled = true;
+    console.log("clicked");
   };
 
   if (!product) {
-    return <div>...</div>;
+    return <div>Loading</div>;
   }
 
   return (
     <div className="w-full flex flex-col max-w-screen-2xl mx-auto mt-10">
       {/* TOP COMPONENT  */}
       <div className="w-full flex flex-col md:flex-row items-center md:items-start md:gap-2">
+        {/* Leftside Component : Image-Name-Price  */}
         <div className="flex flex-wrap w-full md:w-3/4">
           <div className="flex flex-col md:flex-row gap-4 justify-center items-center md:items-start">
             {/* Carousel for product images  */}
@@ -170,7 +177,7 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
               className="w-full max-w-md group"
             >
               <CarouselContent>
-                {product.images.map((item, index) => (
+                {product.images.map((item: any, index: number) => (
                   <CarouselItem key={index}>
                     <div className="p-1">
                       <Card className="border-none shadow-none rounded-xl">
@@ -178,7 +185,7 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
                           <img
                             src={item}
                             alt="img"
-                            className="w-full h-full object-cover rounded-xl hover:scale-110 transition-transform duration-300"
+                            className="w-full h-[450px] object-cover rounded-xl hover:scale-110 transition-transform duration-300"
                           />
                         </CardContent>
                       </Card>
@@ -190,6 +197,7 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
               <CarouselNext className="hidden md:inline-flex opacity-60 group-hover:opacity-100 transition-all duration-300 h-10 w-10 bg-gray-200" />
             </Carousel>
 
+            {/* Product Name-Price  */}
             <div className="flex flex-col gap-5 px-6 md:px-2">
               <div className="font-bold text-xl md:text-4xl mt-2">
                 ₹ {(product.sku.base[0].price * 83).toFixed(2)}
@@ -204,18 +212,20 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
                 <hr />
                 <div className="font-semibold">{product.sku.props[0].name}</div>
                 <div className="w-full flex flex-wrap relative gap-4">
-                  {product.sku.props[0].values.map((item, index) => (
-                    <div
-                      key={index}
-                      className="w-20 h-20 rounded-md cursor-pointer"
-                    >
-                      <img
-                        src={item.image}
-                        alt=""
-                        className="w-full h-full rounded-md"
-                      />
-                    </div>
-                  ))}
+                  {product.sku.props[0].values.map(
+                    (item: any, index: number) => (
+                      <div
+                        key={index}
+                        className="w-20 h-20 rounded-md cursor-pointer"
+                      >
+                        <img
+                          src={item.image}
+                          alt=""
+                          className="w-full h-full rounded-md"
+                        />
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
             </div>
@@ -268,19 +278,42 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
               </div>
 
               <Button
-                onClick={() => handleCart()}
+                onClick={(e) => {
+                  handleCart();
+                  handleClick(e);
+                }}
                 variant="myBtn"
                 size="mySize"
               >
                 Add To Cart
               </Button>
 
-              <div className="flex justify-center items-center gap-5">
+              {updateCart && (
+                <Button
+                  onClick={() => handleUpdateCart()}
+                  variant="myBtn"
+                  size="mySize"
+                >
+                  Update Cart
+                </Button>
+              )}
+
+              <div className="flex justify-center items-center gap-5 ">
                 <button className="rounded-3xl p-3 bg-accent w-1/2 flex justify-center group hover:scale-105 transition-all duration-300">
                   <Share2 className="w-5 h-5  group-hover:scale-105 transition-all duration-300" />
                 </button>
-                <button className="rounded-3xl p-3 bg-accent w-1/2 flex justify-center group hover:scale-105 transition-all duration-300">
-                  <Heart className="w-5 h-5  group-hover:scale-105 transition-all duration-300" />
+                <button
+                  onClick={() => handleWishList()}
+                  className="rounded-3xl p-3 bg-accent w-1/2 flex justify-center group hover:scale-105 transition-all duration-300"
+                >
+                  {isAddedToWishlist ? (
+                    <Heart
+                      fill="red"
+                      className="w-5 h-5 group-hover:scale-105 transition-all duration-300"
+                    />
+                  ) : (
+                    <Heart className="w-5 h-5 group-hover:scale-105 transition-all duration-300" />
+                  )}
                 </button>
               </div>
             </CardContent>
@@ -319,7 +352,7 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
                             0,
                             Math.ceil(product.properties.list.length / 2)
                           )
-                          .map((property, index) => (
+                          .map((property: any, index: any) => (
                             <TableRow key={index}>
                               <TableCell className="bg-accent">
                                 {property.name}
@@ -337,7 +370,7 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
                       <TableBody>
                         {product.properties.list
                           .slice(Math.ceil(product.properties.list.length / 2))
-                          .map((property, index) => (
+                          .map((property: any, index: any) => (
                             <TableRow key={index}>
                               <TableCell className="bg-accent">
                                 {property.name}
@@ -370,7 +403,7 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
                   <CardTitle>Description</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-wrap md:grid md:grid-cols-3 md:gap-4 w-full">
-                  {product.description.images.map((src, index) => (
+                  {product.description.images.map((src: any, index: any) => (
                     <div key={index} className="">
                       <img
                         src={src}

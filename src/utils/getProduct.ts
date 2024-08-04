@@ -1,5 +1,19 @@
 import axios from "axios";
 
+export const fetchCartDetails = async () => {
+  const response = await axios.get(
+    "https://ali-express-clone.onrender.com/api/cart/data",
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: document.cookie,
+      },
+    }
+  );
+
+  return response.data;
+};
+
 export const getProductsList = async (name: string | null) => {
   const options = {
     method: "GET",

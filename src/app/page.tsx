@@ -4,47 +4,9 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ItemCard from "@/components/ItemCard";
-import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import { setHomeProducts } from "@/lib/store/features/product/homeProductSlice";
-
-type Item = {
-  itemId: string;
-  title: string;
-  sales: number;
-  itemUrl: string;
-  image: string;
-  sku: {
-    def: {
-      price: number | null;
-      promotionPrice: number;
-    };
-  };
-  averageStarRate: number | null;
-  type: string;
-};
-
-type SellingPoint = {
-  name: string;
-  id: string;
-};
-
-type Product = {
-  item: Item;
-  delivery: any; // replace 'any' with the appropriate type if known
-  sellingPoints: SellingPoint[];
-};
-
-type Obj = {
-  resultList: Product;
-};
 
 export default function Home() {
   const [products, setProducts] = useState<any>();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const dispatch = useAppDispatch();
-  const homeProducts = useAppSelector((state) => state.homeProducts.data);
 
   useEffect(() => {
     const getProducts = async () => {
@@ -54,19 +16,14 @@ export default function Home() {
           url: "https://ali-express-clone.onrender.com/api/home/moretolove",
         };
         const response = await axios.request(options);
-        setProducts(response.data?.resultList);
-        // dispatch(setHomeProducts(response.data));
+        setProducts(response.data); 
       } catch (error) {
-        console.log(error);
+        console.log("Error while fetching home-products", error);
       }
     };
 
     getProducts();
   }, []);
-
-  useEffect(() => {
-    console.log("products", products);
-  });
 
   return (
     <main className="flex flex-col items-center">
@@ -78,9 +35,11 @@ export default function Home() {
         className="mt-10"
       />
 
-      <div>
-        <h1>More to Love</h1>
-        <div className="grid grid-cols-4 gap-4">
+      <div className="w-full max-w-screen-2xl">
+        <h1 className="mt-14 mb-5 font-bold text-2xl text-center md:text-start">
+          More to Love
+        </h1>
+        <div className="flex flex-wrap gap-5 md:gap-10 justify-center md:justify-start">
           {products &&
             products.map((product: any, index: number) => (
               <div key={index}>
