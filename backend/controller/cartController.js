@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 
-export const addToCart = async (req,res)=>{
+export const addToCart = async (req, res) => {
     try {
         const { productId, title, price,
             image, quantity, size
@@ -16,16 +16,19 @@ export const addToCart = async (req,res)=>{
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
-        
+
         const cartItem = user.cart.find((item) =>
             item.productId === productId && item.size === size
         )
-            // directly add the to cart array because the already existing
-            // logic is handled at fron-end
-            user.cart.push({
-                productId, title, price, image, quantity, size
-            })
-        
+
+        if (cartItem) {
+            return res.status(200).json({ success: false, message: 'Item already in cart', cart: user.cart });
+        }
+
+        user.cart.push({
+            productId, title, price, image, quantity, size
+        })
+
         // Save the user
         await user.save();
 
@@ -83,7 +86,7 @@ export const getUpdatedcart = async (req, res) => {
 
 
 // to remove one item from cart
-export const removeOneItem = async (req, res) => {
+export const removeOneItemFromCart = async (req, res) => {
     const userId = req.userId
     const { productId } = req.params
 
@@ -105,7 +108,7 @@ export const removeOneItem = async (req, res) => {
 
 // to remove all items from cart
 
-export const removeAllItem = async (req, res) => {
+export const removeAllItemFromCart = async (req, res) => {
     const userId = req.userId;  // Assuming user ID is available in req.user
 
     try {

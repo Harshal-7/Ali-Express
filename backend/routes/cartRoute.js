@@ -1,6 +1,6 @@
 import express from 'express'
 import { authMiddleware } from '../middleware/authMiddleware.js'
-import { addToCart, getCartData, getUpdatedcart, removeAllItem, removeOneItem } from '../controller/cartController.js'
+import { addToCart, getCartData, getUpdatedcart, removeAllItemFromCart, removeOneItemFromCart } from '../controller/cartController.js'
 
 const cartRouter = express.Router()
 
@@ -14,10 +14,10 @@ cartRouter.get(`/cart/data`, authMiddleware, getCartData)
 cartRouter.patch(`/cart/:productId`, authMiddleware, getUpdatedcart)
 
 // request to remove one item from cart
-cartRouter.delete(`/cart/removeone/:productId`, authMiddleware, removeOneItem)
+cartRouter.delete(`/cart/removeone/:productId`, authMiddleware, removeOneItemFromCart)
 
 // request to remove all items from cart
-cartRouter.delete(`/cart/removeall`, authMiddleware, removeAllItem)
+cartRouter.delete(`/cart/removeall`, authMiddleware, removeAllItemFromCart)
 
 
 export default cartRouter

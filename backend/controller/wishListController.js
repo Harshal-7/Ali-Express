@@ -50,3 +50,43 @@ export const getWishListData = async (req, res) => {
     }
 
 }
+
+
+
+// to remove one item from cart
+export const removeOneItemFromWhishlist = async (req, res) => {
+    const userId = req.userId
+    const { productId } = req.params
+    console.log(userId, productId)
+
+    try {
+        const user = await User.findById(userId);
+        const wishlistItemIndex = user.wishlist.findIndex(item => item.productId === productId);
+
+        if (wishlistItemIndex !== -1) {
+            user.wishlist.splice(wishlistItemIndex, 1);  // Remove the item from wishlist
+            await user.save();
+            res.json({ message: 'Item removed from cart', wishlist: user.wishlist });
+        } else {
+            res.status(404).json({ message: 'Item not found in cart' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+
+// to remove all items from cart
+
+export const removeAllItemFromWhishlist = async (req, res) => {
+    const userId = req.userId;  // Assuming user ID is available in req.user
+
+    try {
+        const user = await User.findById(userId);
+
+        user.wishlist = [];  // Clear the cart
+        await user.save();
+        res.json({ message: 'All items removed from cart', wishlist: user.wishlist });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+}
