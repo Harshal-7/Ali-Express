@@ -5,11 +5,11 @@ This project is an AliExpress clone built using Next.js and Ali-Express Datahub 
 ## Table of Contents
 
 - [Features](#features)
-- [Live Link](#live-link)
 - [Technologies Used](#technologies-used)
-- [Installation](#installation)
-- [Usage](#usage)
+- [Frontend Installation](#frontend-installation)
+- [Backend Installation](#backend-installation)
 - [API Documentation](#api-documentation)
+- [ Live Link](#live-links)
 - [Contributors](#contributors)
 - [Contributing](#contributing)
 
@@ -22,10 +22,6 @@ This project is an AliExpress clone built using Next.js and Ali-Express Datahub 
 - Checkout process
 - Responsive design
 
-## Live Link
-
-You can view a live demo of the project here: [Live Link](https://ali-express-clone-kohl.vercel.app/)
-
 ## Technologies Used
 
 - Next.js - React framework for server-side rendering and static site generation
@@ -33,7 +29,7 @@ You can view a live demo of the project here: [Live Link](https://ali-express-cl
 - MongoDB - Database for storing user and product data
 - API - Custom APIs for fetching product data, categories, etc.
 
-## Installation
+## Frontend Installation
 
 1. Clone the repository:
 
@@ -48,30 +44,60 @@ You can view a live demo of the project here: [Live Link](https://ali-express-cl
    npm install
    ```
 
-3. Set up environment variables:  
-    Create a **_.env.local_** file in the root directory and add the following variables:
-
-   ```env
-   ALIEXPRESS_API_URL=your_api_url
-   AUTH_SECRET=your_auth_secret
-   DATABASE_URL=your_mongodb_uri
-   ```
-
-   [](#place-1)
-
-## Usage
-
-1. Start the development server:
+3. Start the development server:
 
    ```sh
    npm run dev
    ```
 
-2. Open your browser and go to http://localhost:3000.
+4. Open your browser and go to http://localhost:3000.
+
+## Backend Installation
+
+1. Clone the repository:
+
+   ```sh
+    git clone https://github.com/Harshal-7/Ali-Express.git
+   ```
+
+2. Navigate to the project directory:
+
+   ```sh
+   cd backend
+   ```
+
+3. Install dependencies:
+   ```sh
+   npm install
+   ```
+4. Environment Variables
+
+   Create a .env file in the root of the project and add your own environment variables. Here is an example of what your .env file should look like:
+
+   ```sh
+   PORT="YOUR_PORT"
+   BASE_URL="YOUR_BASE_URL"
+   API_KEY="YOUR_API_KEY"
+   HOST="YOUR_HOST"
+   MONGO_URL="YOUR_MONGO_URL"
+   SECRET_TOKEN="YOUR_SECRET_TOKEN"
+   ```
+
+5. Running the server
+
+   ```sh
+   nodemon server.js
+   ```
 
 ## API Documentation
 
 Full API documentation can be found [Here ](https://documenter.getpostman.com/view/32824294/2sA3rwNuRn).
+
+## Live Links
+
+### You can view a live demo of the project here: [Live Link](https://ali-express-clone-kohl.vercel.app/)
+
+### You can access a live link of backend: [Backend Link](https://ali-express-clone.onrender.com/)
 
 ## Contributors
 
