@@ -20,7 +20,7 @@ Welcome to the AliExpress Clone backend repository. This backend is built with N
 - React.js
 
 
-## Installation
+### Installation
 
 To get started with this project, follow these steps:
 
@@ -39,7 +39,7 @@ To get started with this project, follow these steps:
     npm install
 ```
 
-## Environment Variables
+### Environment Variables
 
 Create a `.env` file in the root of the project and add your own environment variables. Here is an example of what your `.env` file should look like:
 
@@ -53,19 +53,18 @@ SECRET_TOKEN="YOUR_SECRET_TOKEN"
 ```
 
 
-## Running the server
+### Running the server
     ```sh
     nodemon server.js
     ```
 
-
-### Deployment 
-[Backend](https://ali-express-clone.onrender.com) 
-
 ### API Documentation
 You can visit API documentation from [here](https://documenter.getpostman.com/view/32824294/2sA3rwNuRn)
+```
 
-
+### Live Server
+[Backend](https://ali-express-clone.onrender.com) 
+```
 
 
 ### Contributors
@@ -78,9 +77,10 @@ The  contributor of the project are as below, Details as follows
 2. Harshal Shinde
 [GitHub](https://github.com/Harshal-7) |
 [LinkedIn](https://www.linkedin.com/in/harshal-shinde-77a862210?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3ByzOQDYtxQaa7el%2BmrwHMDw%3D%3D) |
+```
 
 
-## Contact
+### Contact
 
 For any inquiries or support, please contact us at zaid shaikh [GitHub](https://github.com/Shaikhmohamm) | 
 
