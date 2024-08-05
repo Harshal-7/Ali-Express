@@ -82,5 +82,6 @@ The  contributor of the project are as below, Details as follows
 
 ## Contact
 
-For any inquiries or support, please contact us at [GitHub](https://github.com/Shaikhmohamm) | 
-[GitHub](https://github.com/Harshal-7)
+For any inquiries or support, please contact us at zaid shaikh [GitHub](https://github.com/Shaikhmohamm) | 
+
+harshal shinde [GitHub](https://github.com/Harshal-7)
