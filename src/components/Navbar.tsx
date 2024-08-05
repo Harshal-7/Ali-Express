@@ -19,32 +19,29 @@ import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { MyDropdownMenu } from "./MyDropdownMenu";
 import Link from "next/link";
-import { getProductsList } from "@/utils/getProduct";
-import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useRouter } from "next/navigation";
-import { setProducts } from "@/lib/store/features/product/productSlice";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/lib/store/store";
+import { setAuthState, selectAuthState } from "@/lib/store/features/auth/authSlice";
 
 const Navbar = () => {
-  // const dispatch = useAppDispatch();
-  // const cartItems = useAppSelector((state) => state.cartItems.data);
+  const dispatch: AppDispatch = useDispatch();
+  const isAuthenticated = useSelector((state: RootState) => selectAuthState(state));
   const [quantity, setQuantity] = useState(1);
-
   const [searchInput, setSearchInput] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const router = useRouter();
 
   useEffect(() => {
     const checkCartQuantity = async () => {
       try {
-        // Check if the product is in the cart
         const cartResponse = await axios.get(
           "https://ali-express-clone.onrender.com/api/cart/data",
           {
             headers: {
-              Authorization: document.cookie,
+              Authorization: Cookies.get("UserAuth") || "",
             },
           }
         );
@@ -52,35 +49,30 @@ const Navbar = () => {
         const cartLength = cartResponse.data?.cart.length;
         setQuantity(cartLength);
       } catch (error) {
-        console.error("Error in navbar", error);
+        console.error("Error fetching cart data", error);
       }
     };
     checkCartQuantity();
-  }, [quantity]);
+  }, []);
 
   useEffect(() => {
     const token = Cookies.get("UserAuth");
-    setIsAuthenticated(!!token);
-  }, []);
+    dispatch(setAuthState(!!token)); // Update Redux state based on cookie presence
+  }, [dispatch]);
 
-  const handleSearchChange = (e: any) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
   };
 
   const handleSearch = async () => {
-    // const response = await getProductsList(searchInput);
-    // dispatch(setProducts(response?.data));
     setSearchInput("");
     router.push(`/search/${searchInput}`);
   };
 
   const handleLogOut = () => {
     Cookies.remove("UserAuth");
-
-    if (!Cookies.get("UserAuth")) {
-      setIsAuthenticated(false);
-      router.replace("/");
-    }
+    dispatch(setAuthState(false)); // Update Redux state on logout
+    router.replace("/");
   };
 
   return (
@@ -88,17 +80,18 @@ const Navbar = () => {
       <ul className="flex gap-2 p-2 w-full max-w-screen-2xl justify-center">
         <div className="flex gap-2 justify-center items-center">
           <Link href="/">
-            <img className="w-56" alt="logo" src="/logo.webp  " />
+            <img className="w-56" alt="logo" src="/logo.webp" />
           </Link>
           <MyDropdownMenu />
         </div>
         <div className="w-1/3 p-2 relative flex justify-center items-center">
           <Input
             className="rounded-full bg-gray-200 text-black px-4"
-            placeholder="smart watches for men"
+            placeholder="Search..."
+            value={searchInput}
             onChange={handleSearchChange}
           />
-          <button onClick={() => handleSearch()}>
+          <button onClick={handleSearch}>
             <Search className="absolute top-[18px] right-5 text-gray-700 w-5 h-5" />
           </button>
         </div>
@@ -108,19 +101,19 @@ const Navbar = () => {
             <HoverCardTrigger asChild>
               <button className="flex gap-2 justify-center items-center">
                 <User className="w-8 h-8" />
-                {isAuthenticated ? ( // change the logic dont check isAuthenticated
+                {isAuthenticated ? (
                   <div className="flex flex-col text-start flex-wrap pr-2">
                     <p className="text-sm line-clamp-1">Hi, User</p>
                     <div className="text-xs flex items-center gap-1">
-                      <p className="">Account</p>
+                      <p>Account</p>
                       <ChevronDown className="w-4 h-4" />
                     </div>
                   </div>
                 ) : (
                   <div className="flex flex-col text-start flex-wrap">
-                    <p className="text-sm ">Welcome</p>
+                    <p className="text-sm">Welcome</p>
                     <div className="text-xs flex items-center gap-1">
-                      <p className="">Sign In / Register</p>
+                      <p>Sign In / Register</p>
                       <ChevronDown className="w-4 h-4" />
                     </div>
                   </div>
@@ -159,19 +152,21 @@ const Navbar = () => {
                   </>
                 )}
                 <Separator />
-                <div className="w-full flex flex-col gap-2 items-start">
-                  <button className="flex gap-2 items-center w-full px-4 py-2 rounded-md hover:bg-gray-100 hover:text-red-500 group">
-                    <NotepadText className="w-4 h-4 group-hover:text-foreground" />
-                    <p>My Order</p>
-                  </button>
-                  <Link
-                    href="/wishlist"
-                    className="flex gap-2 items-center w-full px-4 py-2 rounded-md hover:bg-gray-100 hover:text-red-500 group"
-                  >
-                    <Heart className="w-4 h-4 group-hover:text-foreground" />
-                    <p>Wish List</p>
-                  </Link>
-                </div>
+                {(
+                  <div className="w-full flex flex-col gap-2 items-start">
+                    <button className="flex gap-2 items-center w-full px-4 py-2 rounded-md hover:bg-gray-100 hover:text-red-500 group">
+                      <NotepadText className="w-4 h-4 group-hover:text-foreground" />
+                      <p>My Order</p>
+                    </button>
+                    <Link
+                      href="/wishlist"
+                      className="flex gap-2 items-center w-full px-4 py-2 rounded-md hover:bg-gray-100 hover:text-red-500 group"
+                    >
+                      <Heart className="w-4 h-4 group-hover:text-foreground" />
+                      <p>Wish List</p>
+                    </Link>
+                  </div>
+                )}
               </div>
             </HoverCardContent>
           </HoverCard>

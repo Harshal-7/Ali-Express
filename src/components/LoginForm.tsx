@@ -16,18 +16,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import FormError from "@/components/auth/FormError";
 import { Loader2 } from "lucide-react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
+import { setAuthState } from "@/lib/store/features/auth/authSlice";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
+  const dispatch = useDispatch();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -51,6 +51,9 @@ const LoginForm = () => {
 
       // Set the token in the cookies
       Cookies.set("UserAuth", token, { expires: 7 }); // Expires in 7 days or change as needed
+
+      // Dispatch the action to update the auth state
+      dispatch(setAuthState(true));
 
       toast({
         title: "Success",
