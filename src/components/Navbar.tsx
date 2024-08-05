@@ -68,10 +68,12 @@ const Navbar = () => {
   };
 
   const handleSearch = async () => {
+    console.log("searchInput", searchInput);
+
     // const response = await getProductsList(searchInput);
     // dispatch(setProducts(response?.data));
-    setSearchInput("");
     router.push(`/search/${searchInput}`);
+    setSearchInput("");
   };
 
   const handleLogOut = () => {

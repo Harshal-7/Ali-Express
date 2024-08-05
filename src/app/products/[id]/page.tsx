@@ -348,7 +348,7 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
                   variant="myBtn"
                   size="mySize"
                 >
-                  Update Cart
+                  Add To Cart
                 </Button>
               ) : (
                 <Button
