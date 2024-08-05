@@ -7,13 +7,10 @@ import {
 } from "@/components/ui/hover-card";
 import { ChevronDown, Heart, Menu, NotepadText, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { ProductsCategory } from "@/config.product";
 import { ScrollArea } from "./ui/scroll-area";
-import Link from "next/link";
 import axios from "axios";
-import { getProductsList } from "@/utils/getProduct";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { setProducts } from "@/lib/store/features/product/productSlice";
 import { useRouter } from "next/navigation";

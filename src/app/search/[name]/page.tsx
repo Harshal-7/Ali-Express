@@ -1,14 +1,12 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ItemCard from "@/components/ItemCard";
-import { useAppSelector } from "@/lib/store/hooks";
 
 import { ChevronsUpDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import Loading from "@/components/Loading";
-import LoadingPage from "./loading";
 
 const ProductList = ({ params }: { params: { name: string } }) => {
   const [products, setProducts] = useState<any>();

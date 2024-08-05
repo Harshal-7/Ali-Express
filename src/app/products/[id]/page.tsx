@@ -16,7 +16,7 @@ import {
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
-import LoadingPage from "./loading";
+import LoadingPage from "@/app/loading";
 
 const ProductDescription = ({ params }: { params: { id: Number } }) => {
   const [product, setProduct] = useState<any>();
@@ -207,7 +207,6 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
 
   const handleClick = (e: any) => {
     e.currentTarget.disabled = true;
-    // console.log("clicked");
   };
 
   if (!product) {

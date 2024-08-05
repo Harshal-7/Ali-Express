@@ -13,7 +13,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ShoppingCart, Trash } from "lucide-react";
-import LoginPage from "@/app/(auth)/login/page";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/store/store";
 import {

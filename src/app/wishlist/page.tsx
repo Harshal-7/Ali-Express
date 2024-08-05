@@ -15,33 +15,8 @@ import { ShoppingCart, Trash } from "lucide-react";
 
 const WishListPage = () => {
   const [wishlistItems, setWishlistItems] = useState<any>();
-  const [quantity, setQuantity] = useState(1);
-  const [updateCart, setUpdateCart] = useState(false);
-  const [isAddedToWishlist, setIsAddedToWishlist] = useState(false);
-  const [isInCart, setIsInCart] = useState(false);
+
   const router = useRouter();
-
-  // get all products from cart-database and add them to state
-  // useEffect(() => {
-  //   const fetchCartDetails = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         "https://ali-express-clone.onrender.com/api/wishlist/data",
-  //         {
-  //           headers: {
-  //             Authorization: document.cookie,
-  //           },
-  //         }
-  //       );
-  //       const data = response.data?.wishlist;
-  //       setWishlistItems(data);
-  //     } catch (error) {
-  //       console.log("ERROR : ", error);
-  //     }
-  //   };
-
-  //   fetchCartDetails();
-  // }, []);
 
   useEffect(() => {
     // API call to fetch product details
@@ -96,29 +71,6 @@ const WishListPage = () => {
       console.log("ERROR : ", error);
     }
   };
-
-  // dispatch(removeCartItem(id));
-  //   const removeProductById = async (item: any) => {
-  //     const id = Number(item.productId);
-  //     try {
-  //       //   const response = await axios.delete(
-  //       //     `https://ali-express-clone.onrender.com/api/cart/removeone/${id}`,
-  //       //     {
-  //       //       headers: {
-  //       //         "Content-Type": "application/json",
-  //       //         Authorization: document.cookie,
-  //       //       },
-  //       //     }
-  //       //   );
-
-  //       console.log("REMOVED SUCCESSFULLY");
-
-  //       const data = response.data?.cart;
-  //       setItems(data);
-  //     } catch (error) {
-  //       console.log("ERROR : ", error);
-  //     }
-  //   };
 
   const handleProductInfo = (item: any) => {
     const id = Number(item.productId);
