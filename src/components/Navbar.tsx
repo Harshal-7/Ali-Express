@@ -25,14 +25,20 @@ import { useRouter } from "next/navigation";
 import { setProducts } from "@/lib/store/features/product/productSlice";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/lib/store/store";
+import {
+  setAuthState,
+  selectAuthState,
+} from "@/lib/store/features/auth/authSlice";
 
 const Navbar = () => {
-  // const dispatch = useAppDispatch();
-  // const cartItems = useAppSelector((state) => state.cartItems.data);
+  const dispatch: AppDispatch = useDispatch();
+  const isAuthenticated = useSelector((state: RootState) =>
+    selectAuthState(state)
+  );
   const [quantity, setQuantity] = useState(1);
-
   const [searchInput, setSearchInput] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const router = useRouter();
 
@@ -52,7 +58,7 @@ const Navbar = () => {
         const cartLength = cartResponse.data?.cart.length;
         setQuantity(cartLength);
       } catch (error) {
-        console.error("Error in navbar", error);
+        setQuantity(0);
       }
     };
     checkCartQuantity();
@@ -60,8 +66,8 @@ const Navbar = () => {
 
   useEffect(() => {
     const token = Cookies.get("UserAuth");
-    setIsAuthenticated(!!token);
-  }, []);
+    dispatch(setAuthState(!!token)); // Update Redux state based on cookie presence
+  }, [dispatch]);
 
   const handleSearchChange = (e: any) => {
     setSearchInput(e.target.value);
@@ -69,19 +75,21 @@ const Navbar = () => {
 
   const handleSearch = async () => {
     console.log("searchInput", searchInput);
-
-    // const response = await getProductsList(searchInput);
-    // dispatch(setProducts(response?.data));
     router.push(`/search/${searchInput}`);
     setSearchInput("");
   };
 
   const handleLogOut = () => {
     Cookies.remove("UserAuth");
+    dispatch(setAuthState(false)); // Update Redux state on logout
+    router.replace("/");
+  };
 
-    if (!Cookies.get("UserAuth")) {
-      setIsAuthenticated(false);
-      router.replace("/");
+  const handleGoToCart = () => {
+    if (isAuthenticated) {
+      router.push("/cart");
+    } else {
+      router.push("/login");
     }
   };
 
@@ -177,8 +185,8 @@ const Navbar = () => {
               </div>
             </HoverCardContent>
           </HoverCard>
-          <Link
-            href="/cart"
+          <button
+            onClick={() => handleGoToCart()}
             className="flex gap-2 justify-center items-center relative"
           >
             <ShoppingCart className="w-6 h-6" />
@@ -188,7 +196,7 @@ const Navbar = () => {
               </p>
               <p className="flex flex-col text-start text-sm">Cart</p>
             </div>
-          </Link>
+          </button>
         </div>
       </ul>
     </nav>

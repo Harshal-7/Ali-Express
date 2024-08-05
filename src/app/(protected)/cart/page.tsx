@@ -5,7 +5,6 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-
 import {
   Card,
   CardContent,
@@ -15,12 +14,29 @@ import {
 } from "@/components/ui/card";
 import { ShoppingCart, Trash } from "lucide-react";
 import LoginPage from "@/app/(auth)/login/page";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/lib/store/store";
+import {
+  setAuthState,
+  selectAuthState,
+} from "@/lib/store/features/auth/authSlice";
 
 const CartPage = () => {
   const [totalCost, setTotalCost] = useState(0);
   const [items, setItems] = useState<any>();
 
+  const dispatch: AppDispatch = useDispatch();
+  const isAuthenticated = useSelector((state: RootState) =>
+    selectAuthState(state)
+  );
+
   const router = useRouter();
+
+  // Check wheater user is logged in or not
+  useEffect(() => {
+    const token = Cookies.get("UserAuth");
+    dispatch(setAuthState(!!token)); // Update Redux state based on cookie presence
+  }, [dispatch]);
 
   // get all products from cart-database and add them to state
   useEffect(() => {

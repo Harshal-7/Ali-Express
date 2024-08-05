@@ -4,36 +4,61 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ArrowRight, ShoppingCart } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import { setCartItems } from "@/lib/store/features/cart/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/lib/store/store";
+import {
+  setAuthState,
+  selectAuthState,
+} from "@/lib/store/features/auth/authSlice";
 import axios from "axios";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import { useToast } from "./ui/use-toast";
 
 const ItemCard = ({ product }: { product: any }) => {
-  const dispatch = useAppDispatch();
-  const cartItems = useAppSelector((state) => state.cartItems.data);
+  const dispatch: AppDispatch = useDispatch();
+  const isAuthenticated = useSelector((state: RootState) =>
+    selectAuthState(state)
+  );
+  const router = useRouter();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const token = Cookies.get("UserAuth");
+    dispatch(setAuthState(!!token)); // Update Redux state based on cookie presence
+  }, [dispatch]);
 
   // Add product to cart
   const handleAddToCart = async (item: any) => {
-    console.log("Inside handleAddToCart: ", item);
-    dispatch(setCartItems(item));
-
-    await axios.post(
-      "https://ali-express-clone.onrender.com/api/cart/add",
-      {
-        productId: `${item.itemId}`,
-        title: `${item.title}`,
-        price: (item.sku.def.promotionPrice * 83).toFixed(2),
-        image: `${item.image}`,
-        quantity: 1,
-        size: "m",
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: document.cookie,
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+    try {
+      await axios.post(
+        "https://ali-express-clone.onrender.com/api/cart/add",
+        {
+          productId: `${item.itemId}`,
+          title: `${item.title}`,
+          price: (item.sku.def.promotionPrice * 83).toFixed(2),
+          image: `${item.image}`,
+          quantity: 1,
+          size: "m",
         },
-      }
-    );
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: document.cookie,
+          },
+        }
+      );
+      toast({
+        title: "Item added to cart",
+        className: "text-red-600 bg-white hover:bg-gray-100 font-bold",
+      });
+    } catch (error) {
+      console.log("ERROR adding to cart : ", error);
+    }
   };
 
   return (

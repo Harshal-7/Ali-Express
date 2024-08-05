@@ -5,14 +5,7 @@ import React, { Suspense, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Heart, Lock, Minus, Plus, Share2, ShoppingCart } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -20,16 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import LoadingPage from "./loading";
@@ -55,7 +39,6 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
         );
         setProduct(productResponse.data?.item);
         // console.log("PRODUCT DESCRIPTION : ", productResponse.data?.item);
-
         const checkItemId = productResponse.data?.item?.proitemId;
 
         // Check if the product is in the cart
@@ -67,14 +50,18 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
             },
           }
         );
-
         const cartItems = cartResponse.data?.cart || [];
         // console.log("cartItems : ", cartItems);
-        const isPresent = cartItems.some(
-          (item: any) => item.checkItemId == checkItemId
-        );
+        const isPresent = cartItems.some((item: any) => {
+          // console.log("item - ", item);
+          item.productId == checkItemId;
+        });
         setIsInCart(isPresent);
-        setQuantity(cartItems[0].quantity);
+        if (!isPresent) {
+          setQuantity(1);
+        } else {
+          setQuantity(cartItems[0].quantity);
+        }
         // console.log("IS IN CART? : ", isPresent);
       } catch (error) {
         console.error("Error fetching data", error);
@@ -352,9 +339,8 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
                 </Button>
               ) : (
                 <Button
-                  onClick={(e) => {
+                  onClick={() => {
                     handleAddToCart();
-                    handleClick(e);
                   }}
                   variant="myBtn"
                   size="mySize"
