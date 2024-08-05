@@ -15,13 +15,39 @@ import { ShoppingCart, Trash } from "lucide-react";
 
 const WishListPage = () => {
   const [wishlistItems, setWishlistItems] = useState<any>();
-
+  const [quantity, setQuantity] = useState(1);
+  const [updateCart, setUpdateCart] = useState(false);
+  const [isAddedToWishlist, setIsAddedToWishlist] = useState(false);
+  const [isInCart, setIsInCart] = useState(false);
   const router = useRouter();
 
   // get all products from cart-database and add them to state
+  // useEffect(() => {
+  //   const fetchCartDetails = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         "https://ali-express-clone.onrender.com/api/wishlist/data",
+  //         {
+  //           headers: {
+  //             Authorization: document.cookie,
+  //           },
+  //         }
+  //       );
+  //       const data = response.data?.wishlist;
+  //       setWishlistItems(data);
+  //     } catch (error) {
+  //       console.log("ERROR : ", error);
+  //     }
+  //   };
+
+  //   fetchCartDetails();
+  // }, []);
+
   useEffect(() => {
-    const fetchCartDetails = async () => {
+    // API call to fetch product details
+    const fetchIsPresentInWishlist = async () => {
       try {
+        // Fetch product details
         const response = await axios.get(
           "https://ali-express-clone.onrender.com/api/wishlist/data",
           {
@@ -31,13 +57,25 @@ const WishListPage = () => {
           }
         );
         const data = response.data?.wishlist;
+        const checkItemId = response.data?.item?.proitemId;
+
+        const wishlistItems = response.data?.wishlist;
+        // console.log("cartItems : ", cartItems);
+        const isPresent = wishlistItems.some(
+          (item: any) => item.checkItemId == checkItemId
+        );
+
+        console.log("response : ", response);
+        console.log("data : ", data);
+        console.log("cartItems : ", checkItemId);
+
         setWishlistItems(data);
       } catch (error) {
-        console.log("ERROR : ", error);
+        console.error("Error fetching data", error);
       }
     };
 
-    fetchCartDetails();
+    fetchIsPresentInWishlist();
   }, []);
 
   const removeAllProducts = async () => {

@@ -24,14 +24,39 @@ import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useRouter } from "next/navigation";
 import { setProducts } from "@/lib/store/features/product/productSlice";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 const Navbar = () => {
-  const dispatch = useAppDispatch();
-  const cartItems = useAppSelector((state) => state.cartItems.data);
-  const router = useRouter();
+  // const dispatch = useAppDispatch();
+  // const cartItems = useAppSelector((state) => state.cartItems.data);
+  const [quantity, setQuantity] = useState(1);
 
   const [searchInput, setSearchInput] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkCartQuantity = async () => {
+      try {
+        // Check if the product is in the cart
+        const cartResponse = await axios.get(
+          "https://ali-express-clone.onrender.com/api/cart/data",
+          {
+            headers: {
+              Authorization: document.cookie,
+            },
+          }
+        );
+
+        const cartLength = cartResponse.data?.cart.length;
+        setQuantity(cartLength);
+      } catch (error) {
+        console.error("Error in navbar", error);
+      }
+    };
+    checkCartQuantity();
+  }, [quantity]);
 
   useEffect(() => {
     const token = Cookies.get("UserAuth");
@@ -43,8 +68,8 @@ const Navbar = () => {
   };
 
   const handleSearch = async () => {
-    const response = await getProductsList(searchInput);
-    dispatch(setProducts(response?.data));
+    // const response = await getProductsList(searchInput);
+    // dispatch(setProducts(response?.data));
     setSearchInput("");
     router.push(`/search/${searchInput}`);
   };
@@ -73,7 +98,7 @@ const Navbar = () => {
             placeholder="smart watches for men"
             onChange={handleSearchChange}
           />
-          <button onClick={handleSearch}>
+          <button onClick={() => handleSearch()}>
             <Search className="absolute top-[18px] right-5 text-gray-700 w-5 h-5" />
           </button>
         </div>
@@ -155,21 +180,12 @@ const Navbar = () => {
             className="flex gap-2 justify-center items-center relative"
           >
             <ShoppingCart className="w-6 h-6" />
-            {cartItems ? (
-              <div className="flex flex-col">
-                <p className="text-xs bg-white text-black rounded-full text-center">
-                  {cartItems.length}
-                </p>
-                <p className="flex flex-col text-start text-sm">Cart</p>
-              </div>
-            ) : (
-              <div className="flex flex-col">
-                <p className="text-xs bg-white text-black rounded-full text-center">
-                  0
-                </p>
-                <p className="flex flex-col text-start text-sm">Cart</p>
-              </div>
-            )}
+            <div className="flex flex-col">
+              <p className="text-xs bg-white text-black rounded-full text-center">
+                {quantity}
+              </p>
+              <p className="flex flex-col text-start text-sm">Cart</p>
+            </div>
           </Link>
         </div>
       </ul>

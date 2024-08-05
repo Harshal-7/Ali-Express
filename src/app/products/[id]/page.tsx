@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Heart, Lock, Minus, Plus, Share2, ShoppingCart } from "lucide-react";
@@ -32,36 +32,95 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
-import Loading from "@/components/Loading";
+import LoadingPage from "./loading";
 
 const ProductDescription = ({ params }: { params: { id: Number } }) => {
   const [product, setProduct] = useState<any>();
   const [quantity, setQuantity] = useState(1);
   const [updateCart, setUpdateCart] = useState(false);
   const [isAddedToWishlist, setIsAddedToWishlist] = useState(false);
+  const [isInCart, setIsInCart] = useState(false);
 
   const { toast } = useToast();
 
   useEffect(() => {
     // API call to fetch product details
-    const handleProductInfo = async (itemId: any) => {
-      const response = await axios.get(
-        `https://ali-express-clone.onrender.com/api/product/${itemId}`
-      );
+    const itemId = Number(params.id);
 
-      setProduct(response?.data?.item);
-      console.log("PRODUCT DESCRIPTION : ", response?.data?.item);
-      // setQuantity()
+    const fetchProductDetailsAndCartStatus = async (itemId: any) => {
+      try {
+        // Fetch product details
+        const productResponse = await axios.get(
+          `https://ali-express-clone.onrender.com/api/product/${itemId}`
+        );
+        setProduct(productResponse.data?.item);
+        // console.log("PRODUCT DESCRIPTION : ", productResponse.data?.item);
+
+        const checkItemId = productResponse.data?.item?.proitemId;
+
+        // Check if the product is in the cart
+        const cartResponse = await axios.get(
+          "https://ali-express-clone.onrender.com/api/cart/data",
+          {
+            headers: {
+              Authorization: document.cookie,
+            },
+          }
+        );
+
+        const cartItems = cartResponse.data?.cart || [];
+        // console.log("cartItems : ", cartItems);
+        const isPresent = cartItems.some(
+          (item: any) => item.checkItemId == checkItemId
+        );
+        setIsInCart(isPresent);
+        setQuantity(cartItems[0].quantity);
+        // console.log("IS IN CART? : ", isPresent);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
     };
 
+    fetchProductDetailsAndCartStatus(itemId);
+  }, [params.id]);
+
+  useEffect(() => {
+    // API call to fetch Is Product Present In Wishlist
     const itemId = Number(params.id);
-    handleProductInfo(itemId);
-  }, []);
+
+    const fetchIsPresentInWishlist = async (itemId: any) => {
+      try {
+        // Fetch product details
+        const response = await axios.get(
+          "https://ali-express-clone.onrender.com/api/wishlist/data",
+          {
+            headers: {
+              Authorization: document.cookie,
+            },
+          }
+        );
+        const data = response.data?.wishlist;
+        const checkItemId = response.data?.item?.proitemId;
+
+        const wishlistItems = response.data?.wishlist;
+        // console.log("cartItems : ", cartItems);
+        const isPresent = wishlistItems.some(
+          (item: any) => item.checkItemId == checkItemId
+        );
+
+        setIsAddedToWishlist(isPresent);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
+
+    fetchIsPresentInWishlist(itemId);
+  }, [params.id]);
 
   // Add Item To Cart
-  const handleCart = async () => {
+  const handleAddToCart = async () => {
     try {
-      await axios.post(
+      const res = await axios.post(
         "https://ali-express-clone.onrender.com/api/cart/add",
         {
           productId: `${product.itemId}`,
@@ -78,6 +137,10 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
           },
         }
       );
+      toast({
+        title: "Item added to cart",
+        className: "text-red-600 bg-white hover:bg-gray-100 font-bold",
+      });
     } catch (error) {
       console.log("ERROR adding to cart : ", error);
     }
@@ -112,7 +175,7 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
 
   const handleRemoveFromWishlist = async () => {
     try {
-      await axios.delete(
+      const res = await axios.delete(
         `https://ali-express-clone.onrender.com/api/wishlist/removeone/${product.itemId}`,
         {
           headers: {
@@ -121,6 +184,7 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
           },
         }
       );
+      console.log("remove wishlist : ", res);
     } catch (error) {
       console.log("ERROR removing from wishlist : ", error);
     }
@@ -156,11 +220,11 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
 
   const handleClick = (e: any) => {
     e.currentTarget.disabled = true;
-    console.log("clicked");
+    // console.log("clicked");
   };
 
   if (!product) {
-    return <Loading />;
+    return <LoadingPage />;
   }
 
   return (
@@ -278,24 +342,24 @@ const ProductDescription = ({ params }: { params: { id: Number } }) => {
                 </div>
               </div>
 
-              <Button
-                onClick={(e) => {
-                  handleCart();
-                  handleClick(e);
-                }}
-                variant="myBtn"
-                size="mySize"
-              >
-                Add To Cart
-              </Button>
-
-              {updateCart && (
+              {isInCart ? (
                 <Button
                   onClick={() => handleUpdateCart()}
                   variant="myBtn"
                   size="mySize"
                 >
                   Update Cart
+                </Button>
+              ) : (
+                <Button
+                  onClick={(e) => {
+                    handleAddToCart();
+                    handleClick(e);
+                  }}
+                  variant="myBtn"
+                  size="mySize"
+                >
+                  Add To Cart
                 </Button>
               )}
 
